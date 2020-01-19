@@ -13,30 +13,20 @@ import {
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: new HttpLink({
-    uri: "http://localhost:4000",
-    fetchOptions: {
-      mode : 'no-cors'
-    }
-  }),
+    uri: "http://localhost:4000/graphql"
+  })
 });
-
-const GET_BOOKS = gql`
-  {
-    books {
-      title
-      author
-    }
-  }
-`;
+/*
 client
   .query({
-    query: GET_BOOKS
+    query: GET_USERS
   })
   .then((result: any) => console.log(result))
-  .catch((e: any) => console.log(e));
+  .catch((e: any) => console.log(e));*/
+
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <App/>
+    <App />
   </ApolloProvider>,
   document.getElementById("root")
 );
