@@ -1,0 +1,54 @@
+{
+  "name": "react-crud",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "@types/bluebird": "^3.5.29",
+    "@types/hapi": "^18.0.3",
+    "@types/jest": "^24.0.0",
+    "@types/node": "^12.12.24",
+    "@types/react": "^16.9.17",
+    "@types/react-dom": "^16.9.4",
+    "@types/tedious": "^4.0.0",
+    "@types/validator": "^12.0.1",
+    "apollo-server": "^2.9.16",
+    "apollo-server-hapi": "^2.9.16",
+    "graphql": "^14.5.8",
+    "hapi": "^18.1.0",
+    "mssql": "^6.0.1",
+    "pg": "^7.17.1",
+    "pg-hstore": "^2.3.3",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-scripts": "3.3.0",
+    "tedious": "^8.0.1",
+    "typescript": "~3.7.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "sequelize": "^5.21.3"
+  }
+}
