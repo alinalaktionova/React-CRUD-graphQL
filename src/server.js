@@ -1,65 +1,56 @@
-
-const { Client } = require('pg');
-
-const client = new Client({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'users',
-    password: 'alina123',
-    port: 5432,
-});
-console.dir(client);
-client.connect();
-
-client.query('SELECT * FROM users', (err, res) => {
-    console.log(err, res.rows);
-    client.end()
-});
-const Sequelize = require("sequelize");
-const sequelize = new Sequelize("users", "postgres", "alina123", {
-    dialect: 'postgres',
-    host: "localhost",
-    port: "5432"
-});
-// @ts-ignore
-sequelize
-    .authenticate()
-    .then(() => {
-        console.log('Connection has been established successfully.');
-    })
-    .catch((err) => {
-        console.log('Unable to connect to the database', err);
-    });
-console.dir(sequelize);
-const { ApolloServer, gql } = require('apollo-server-hapi');
+const { makeExecutableSchema } = require ('graphql-tools');
+const {gql, ApolloServer } = require('apollo-server-hapi');
 const Hapi = require('hapi');
 
+const books = [
+    {
+        title: 'Harry Potter and the Chamber of Secrets',
+        author: 'J.K. Rowling',
+    },
+    {
+        title: 'Jurassic Park',
+        author: 'Michael Crichton',
+    },
+];
 const typeDefs = gql`
+    type Book {
+        title: String
+        author: String
+    }
     type Query {
-        "A simple type for getting started!"
-        hello: String
+        books: [Book]
     }
 `;
 const resolvers = {
     Query: {
-        hello: () => 'world',
+        books: () => books,
     },
 };
+const schema = makeExecutableSchema({
+    typeDefs,
+    resolvers,
+});
+
+const server = new ApolloServer({
+    schema:schema
+});
 
 async function StartServer() {
-    const server = new ApolloServer({ typeDefs, resolvers });
 
-    const app = new Hapi.server({
-        port: 4000
+    const app = Hapi.server({
+        port: 4000,
+        host:'localhost'
     });
 
-    await server.applyMiddleware({
-        app,
-    });
+    await server.applyMiddleware({ app });
 
-    await server.installSubscriptionHandlers(app.listener);
-
-    await app.start();
+    try {
+        await app.start();
+        console.log(`Server is running at: ${app.info.uri}`);
+    } catch (err) {
+        console.log(`Error while starting server: ${err.message}`)
+    }
 }
 
-StartServer().then(()=> console.log("hello world")).catch(error => console.log(error));
+StartServer().then(res => res);
+
