@@ -1,5 +1,4 @@
 const Sequelize = require("sequelize");
-
 const sequelize = new Sequelize("users", "postgres", "alina123", {
   dialect: "postgres",
   host: "localhost",
@@ -39,4 +38,4 @@ const Users = sequelize.define("users", {
   }
 });
 
-module.exports = Users;
+module.exports = Users ;

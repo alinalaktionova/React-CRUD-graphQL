@@ -1,27 +1,11 @@
 import React, { useState } from "react";
 import {gql, useMutation} from "@apollo/client";
-import styled from "styled-components";
+import * as style from "./FormUser.style";
 
-const Form = styled.form`
-    width: 30%;
-    display: flex;
-    flex-direction: column;
-`;
-const Input = styled.input`
-    height: 30px;
-    margin: 20px;
-    border-radius: 10px;
-`;
-const Button = styled.button`
-    width: 20%;
-    height: 30px;
-    margin: 0 auto;
-    border-radius: 10px;
-`;
 const CREATE_USER = gql`
-    mutation ($name: String!, $login: String!, $password: String!, $isAdmin: Boolean!)
+    mutation ($data: UserInfo)
     {
-        createUser(name: $name, login: $login, password: $password, isAdmin: $isAdmin) {
+        createUser(data:$data) {
             id
             name
             login
@@ -32,11 +16,18 @@ const CREATE_USER = gql`
 `;
 
 const FormUser = () => {
+
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const dataUser = {
+        name: name,
+        login: email,
+        password: password,
+        isAdmin: false
+    };
     const [createUser] = useMutation(CREATE_USER, {
-        variables: { name: name, login: email, password: password, isAdmin: false }
+        variables: { data: dataUser }
     });
     const onSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -48,30 +39,30 @@ const FormUser = () => {
     };
 
     return (
-        <Form onSubmit={onSubmitForm}>
-            <Input
+        <style.Form onSubmit={onSubmitForm}>
+            <style.Input
                 type="name"
                 value={name}
                 placeholder="Name"
                 name="name"
                 onChange={e => setName(e.target.value)}
             />
-            <Input
+            <style.Input
                 type="email"
                 value={email}
                 placeholder="Email"
                 name="email"
                 onChange={e => setEmail(e.target.value)}
             />
-            <Input
+            <style.Input
                 type="password"
                 value={password}
                 placeholder="Password"
                 name="password"
                 onChange={e => setPassword(e.target.value)}
             />
-            <Button type="submit">Create user</Button>
-        </Form>
+            <style.Button type="submit">Create user</style.Button>
+        </style.Form>
     );
 };
 

@@ -1,11 +1,14 @@
 const { ApolloServer } = require("apollo-server-hapi");
 const Hapi = require("hapi");
-const Users = require("./dbconnection");
-const schema = require("./schema");
+const Users = require("./models");
+const schema = require("./shema/schema");
+const Redis = require ("ioredis");
+
+const redis = new Redis();
 
 const server = new ApolloServer({
   schema: schema,
-  context: { Users }
+  context: {Users, redis}
 });
 
 async function StartServer() {
@@ -26,3 +29,4 @@ async function StartServer() {
 }
 
 StartServer().then(res => res);
+module.exports = redis;
