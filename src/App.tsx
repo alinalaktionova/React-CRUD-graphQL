@@ -1,5 +1,5 @@
 import React from "react";
-import FormUser from "./Users/FormUser";
+import CreateUserForm from "./ProfileUserInfo/CreateUserForm";
 import UserList from "./Users/UserList";
 import { gql, useQuery } from "@apollo/client";
 import styled from "styled-components";
@@ -10,17 +10,20 @@ import {
   Switch
 } from "react-router-dom";
 import Login from "./Login/Login";
-import UserInfo from "./Users/UserInfo";
-
+import CurrentUser from "./ProfileUserInfo/CurrentUser";
+import Cookies from "js-cookie";
 
 const ContentWrapper = styled.div`
   display: flex;
   flex-direction: row;
 `;
+const ActiveUser = styled.div`
+  width: 30%;
+`;
 
 const GET_USER_INFO = gql`
-  query ($key: String!){
-    getUserInfo(key:$key){
+  query($key: String!) {
+    getUserInfo(key: $key) {
       id
       name
       login
@@ -30,27 +33,31 @@ const GET_USER_INFO = gql`
   }
 `;
 
+const token = Cookies.get("token");
+console.dir(token);
 const App: React.FC = () => {
-  const {loading, error, data} = useQuery(GET_USER_INFO, {variables: {key: "user"}});
-  console.dir(data && data.getUserInfo);
-  if(error) {
-    console.dir(error)
+  const { loading, error, data } = useQuery(GET_USER_INFO, {
+    variables: { key: "user" }
+  });
+  console.dir(data);
+  if (error) {
+    return <div>Error</div>;
   }
-  if(loading) {
-    return <div>Loading...</div>
+  if (loading) {
+    return <div>Loading...</div>;
   }
   return (
     <Router>
       <ContentWrapper>
         <Switch>
           <Route exact path="/">
-            { data? <Redirect to="/users"/> : <Login />}
+            {token? <Redirect to="/users" /> : <Login />}
           </Route>
           <Route path="/users">
-            <div>
-            <UserInfo />
-              {data.getUserInfo.isAdmin && <FormUser />}
-            </div>
+            <ActiveUser>
+              <CurrentUser />
+              {data.getUserInfo && data.getUserInfo.isAdmin && <CreateUserForm />}
+            </ActiveUser>
             <UserList {...data} />
           </Route>
         </Switch>

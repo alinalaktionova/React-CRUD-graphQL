@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {gql, useMutation} from "@apollo/client";
-import * as style from "./FormUser.style";
+import {Input, Form, Button} from "./FormUser.style";
 
 const CREATE_USER = gql`
     mutation ($data: UserInfo)
@@ -15,8 +15,7 @@ const CREATE_USER = gql`
     }
 `;
 
-const FormUser = () => {
-
+const CreateUserForm = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -39,31 +38,31 @@ const FormUser = () => {
     };
 
     return (
-        <style.Form onSubmit={onSubmitForm}>
-            <style.Input
+        <Form onSubmit={onSubmitForm}>
+            <Input
                 type="name"
                 value={name}
                 placeholder="Name"
                 name="name"
                 onChange={e => setName(e.target.value)}
             />
-            <style.Input
+            <Input
                 type="email"
                 value={email}
                 placeholder="Email"
                 name="email"
                 onChange={e => setEmail(e.target.value)}
             />
-            <style.Input
+            <Input
                 type="password"
                 value={password}
                 placeholder="Password"
                 name="password"
                 onChange={e => setPassword(e.target.value)}
             />
-            <style.Button type="submit">Create user</style.Button>
-        </style.Form>
+            <Button type="submit">Create user</Button>
+        </Form>
     );
 };
 
-export default FormUser;
+export default CreateUserForm;

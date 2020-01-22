@@ -1,15 +1,19 @@
 import React, { useState } from "react";
 import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import { Redirect } from "react-router";
+import Cookies from "js-cookie";
 
 const AUTHENTICATE = gql`
   query($login: String!, $password: String!) {
     authenticate(login: $login, password: $password) {
-      id
-      name
-      login
-      password
-      isAdmin
+      user {
+        id
+        name
+        login
+        password
+        isAdmin
+      }
+      token
     }
   }
 `;
@@ -37,20 +41,22 @@ const Login = () => {
   if (error) {
     return <p>Error</p>;
   }
-   if(data){
-       setUserInfo({
-         variables: {
-           key: "user",
-           value: {
-             id: data.authenticate.id,
-             name: data.authenticate.name,
-             login: data.authenticate.login,
-             password: data.authenticate.password,
-             isAdmin: data.authenticate.isAmin
-           }
-         }
-       });
-     }
+  if (data) {
+    setUserInfo({
+      variables: {
+        key: "user",
+        value: {
+          id: data.authenticate.user.id,
+          name: data.authenticate.user.name,
+          login: data.authenticate.user.login,
+          password: data.authenticate.user.password,
+          isAdmin: data.authenticate.user.isAdmin,
+          token: data.authenticate.token
+        }
+      }
+    });
+    Cookies.set("token", data.authenticate.token)
+  }
   return data ? (
     <Redirect to="/users" />
   ) : (

@@ -1,7 +1,7 @@
 import React from "react";
 import { gql, useQuery } from "@apollo/client";
 import User from "./User";
-import styled from "styled-components";
+import {List} from "./UserList.styles";
 
 const GET_USERS = gql`
   query($id: Int!) {
@@ -15,13 +15,12 @@ const GET_USERS = gql`
   }
 `;
 
-const List = styled.ul`
-  width: 60%;
-`;
 const UserList = (props: any) => {
   console.dir(props);
-  const { loading, error, data } = useQuery(GET_USERS, {variables: {id: props.getUserInfo ? props.getUserInfo.id: 0}});
-  console.dir(data)
+  const { loading, error, data } = useQuery(GET_USERS, {
+    variables: { id: props.getUserInfo ? props.getUserInfo.id : 0 }
+  });
+  console.dir(data);
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -30,6 +29,7 @@ const UserList = (props: any) => {
   }
   return (
     <List>
+      <span>User List</span>
       {data.getAllUsers.map((user: any) => (
         <User
           id={user.id}
@@ -38,6 +38,7 @@ const UserList = (props: any) => {
           login={user.login}
           password={user.password}
           isAdmin={user.isAdmin}
+          {...props}
         />
       ))}
     </List>
