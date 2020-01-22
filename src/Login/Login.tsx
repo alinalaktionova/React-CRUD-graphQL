@@ -1,43 +1,20 @@
 import React, { useState } from "react";
-import { gql, useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import { Redirect } from "react-router";
 import Cookies from "js-cookie";
-
-const AUTHENTICATE = gql`
-  query($login: String!, $password: String!) {
-    authenticate(login: $login, password: $password) {
-      user {
-        id
-        name
-        login
-        password
-        isAdmin
-      }
-      token
-    }
-  }
-`;
-const SET_USER = gql`
-  mutation($key: String!, $value: UserInfo) {
-    setUserInfo(key: $key, value: $value)
-  }
-`;
+import { SET_USER } from "../mutationConstants";
+import { AUTHENTICATE } from "../queriesContants";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [login, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [authenticate, { loading, error, data }] = useLazyQuery(AUTHENTICATE);
+  const [authenticate, { error, data }] = useLazyQuery(AUTHENTICATE);
   const [setUserInfo] = useMutation(SET_USER);
   const onSubmitForm = () => {
     authenticate({
-      variables: { login: email, password: password }
+      variables: { login: login, password: password }
     });
   };
-  console.dir(data);
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
   if (error) {
     return <p>Error</p>;
   }
@@ -55,7 +32,7 @@ const Login = () => {
         }
       }
     });
-    Cookies.set("token", data.authenticate.token)
+    Cookies.set("token", data.authenticate.token);
   }
   return data ? (
     <Redirect to="/users" />
@@ -68,7 +45,7 @@ const Login = () => {
     >
       <input
         type="email"
-        value={email}
+        value={login}
         name="email"
         onChange={e => setEmail(e.target.value)}
       />

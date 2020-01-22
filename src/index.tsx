@@ -14,13 +14,6 @@ const client = new ApolloClient({
     uri: "http://localhost:4000/graphql"
   })
 });
-/*
-client
-  .query({
-    query: GET_USERS
-  })
-  .then((result: any) => console.log(result))
-  .catch((e: any) => console.log(e));*/
 
 ReactDOM.render(
   <ApolloProvider client={client}>

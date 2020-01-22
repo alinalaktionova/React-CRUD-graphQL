@@ -1,34 +1,18 @@
 import React, { useState } from "react";
-import { gql, useMutation } from "@apollo/client";
-import {UserItem} from "./UserList.styles";
+import { useMutation } from "@apollo/client";
+import { UserItem } from "./UserList.styles";
 import UserInfoCard from "../HOCUserInfo";
+import { UserPropInterface } from "./UsersInterfaces";
+import { UPDATE_USER, DELETE_USER } from "../mutationConstants";
 
-const DELETE_USER = gql`
-  mutation($id: Int!) {
-    deleteUser(id: $id)
-  }
-`;
-
-const UPDATE_USER = gql`
-  mutation($id: Int!, $data: UserInfo) {
-    updateUser(id: $id, data: $data) {
-      id
-      name
-      login
-      password
-      isAdmin
-    }
-  }
-`;
-const User = (props: any) => {
-  console.dir(props);
+const User = (props: UserPropInterface) => {
   const [name, setName] = useState(props.name);
-  const [email, setEmail] = useState(props.login);
+  const [login, setEmail] = useState(props.login);
   const [password, setPassword] = useState(props.password);
   const [isAdmin, setAdmin] = useState(props.isAdmin);
   const dataUser = {
     name: name || props.name,
-    login: email || props.login,
+    login: login || props.login,
     password: password || props.password,
     isAdmin: isAdmin || props.isAdmin
   };
@@ -55,20 +39,25 @@ const User = (props: any) => {
   };
   return (
     <UserItem>
-      <UserInfoCard {...props} />
+      <UserInfoCard
+        setName={setName}
+        setEmail={setEmail}
+        setPassword={setPassword}
+        name={name}
+        login={login}
+        password={password}
+      />
       {props.getUserInfo && props.getUserInfo.isAdmin && (
-        <input
-          type="checkbox"
-          name="admin"
-          checked={isAdmin}
-          onChange={e => setAdmin(e.target.checked)}
-        />
-      )}
-      {props.getUserInfo && props.getUserInfo.isAdmin && (
-        <button onClick={onEditBtnClick}>edit</button>
-      )}
-      {props.getUserInfo && props.getUserInfo.isAdmin && (
-        <button onClick={onDeleteBtnClick}>delete</button>
+        <React.Fragment>
+          <input
+            type="checkbox"
+            name="admin"
+            checked={isAdmin}
+            onChange={e => setAdmin(e.target.checked)}
+          />
+          <button onClick={onEditBtnClick}>edit</button>
+          <button onClick={onDeleteBtnClick}>delete</button>
+        </React.Fragment>
       )}
     </UserItem>
   );

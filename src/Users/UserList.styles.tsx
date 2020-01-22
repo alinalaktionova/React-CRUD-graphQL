@@ -8,9 +8,9 @@ export const UserItem = styled.li`
   margin: 20px;
   height: 60px;
   align-items: center;
+  width: 90%;
 `;
 
-export const List = styled.ul`
-  width: 70%;
+export const ListUser = styled.ul`
   text-align: center;
 `;

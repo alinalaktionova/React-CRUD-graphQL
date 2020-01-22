@@ -3,8 +3,6 @@ const TokenGenerator = require("uuid-token-generator");
 const { Op } = require("sequelize");
 const tokgen = new TokenGenerator();
 
-console.dir(tokgen.generate());
-
 const resolvers = {
   Query: {
     async authenticate(root, { login, password }) {
@@ -17,13 +15,18 @@ const resolvers = {
         throw new Error("Email or password isn`t correct");
       }
     },
+    async logoutUser(parent, { key }, { redis }) {
+      try {
+        await redis.del(key);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    },
     async getUserInfo(parent, { key }, { redis }) {
       try {
-          console.log("get");
-        console.dir(JSON.parse(await redis.get(key)));
         return JSON.parse(await redis.get(key));
       } catch (e) {
-        console.dir(e);
         return null;
       }
     },
@@ -34,23 +37,13 @@ const resolvers = {
   Mutation: {
     async setUserInfo(parent, { key, value }, { redis }) {
       try {
-        console.log(value);
         await redis.set(key, JSON.stringify(value));
         return true;
       } catch (e) {
-        console.log(e);
         return false;
       }
     },
-    async logoutUser(parent, { key }, { redis }) {
-      try {
-        await redis.del(key);
-        return true;
-      } catch (e) {
-        console.log(e);
-        return false;
-      }
-    },
+
     async createUser(root, { data }) {
       return Users.create({
         name: data.name,
