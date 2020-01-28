@@ -22,7 +22,7 @@ const typeDefs = gql`
   }
   type Query {
     getAllUsers(id: Int!): [User]
-    getUserInfo(key: String!): User
+    getUserInfo: User
     authenticate(login: String!, password: String!): Auth
     logoutUser(key: String!): Boolean!
   }

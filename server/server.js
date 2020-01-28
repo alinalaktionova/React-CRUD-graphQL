@@ -10,31 +10,28 @@ const env = require("./dbconnection");
 const redis = new Redis();
 
 async function tradeTokenForUser(token) {
-  if (token === Cookies.get("token")) {
-    console.log(token === Cookies.get("token"));
-    return JSON.parse(await redis.get("user"));
+  const userObj = JSON.parse(await redis.get(token));
+  if (userObj) {
+    return userObj;
   } else {
     return null;
   }
 }
 
 const server = new ApolloServer({
-  schema: schema,
-  context: async (req) => {
+  schema,
+  context: async ({request}) => {
     let authToken = null;
     let currentUser = null;
-
     try {
-      authToken = req.request.headers.authorization;
+      authToken = request.headers.authorization;
       if (authToken) {
         currentUser = await tradeTokenForUser(authToken);
+        console.log("currentUser context", currentUser)
       }
     } catch (e) {
-      console.log(req.request.headers)
-      console.log(e.message)
       console.warn(`Unable to authenticate using auth token: ${authToken}`);
     }
-
     return {
       authToken,
       currentUser,
@@ -42,7 +39,6 @@ const server = new ApolloServer({
     };
   }
 });
-
 async function StartServer() {
   const app = Hapi.server({
     port: env.PORT_SERVER,

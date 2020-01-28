@@ -19,21 +19,20 @@ const Login = () => {
     return <p>Error</p>;
   }
   if (data) {
-    console.dir(data)
+    console.dir(data);
     setUserInfo({
       variables: {
-        key: "user",
+        key: data.authenticate.token,
         value: {
           id: data.authenticate.user.id,
           name: data.authenticate.user.name,
           login: data.authenticate.user.login,
           password: data.authenticate.user.password,
-          isAdmin: data.authenticate.user.isAdmin,
-          token: data.authenticate.token
+          isAdmin: data.authenticate.user.isAdmin
         }
       }
     });
-    Cookies.set("token", data.authenticate.token);
+    Cookies.set("token", data.authenticate.token, {expires: 1/24});
   }
   return data ? (
       <Redirect to="/users" />

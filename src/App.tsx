@@ -30,14 +30,13 @@ const App: React.FC = () => {
       <ContentWrapper>
         <Switch>
           <Route exact path="/">
-            {/*{token ? <Redirect to="/users" /> : */}<Login />
+            {token ? <Redirect to="/users" /> : <Login />}
           </Route>
           <Route path="/users">
             <ActiveUser>
               <CurrentUser />
-            {/*  {data.getUserInfo && data.getUserInfo.isAdmin && (*/}
-                <CreateUserForm />
-
+              {data.getUserInfo && data.getUserInfo.isAdmin && (
+                <CreateUserForm />)}
             </ActiveUser>
             <UserList {...data} />
           </Route>

@@ -1,14 +1,24 @@
 const Users = require("../models");
-const TokenGenerator = require("uuid-token-generator");
 const { Op } = require("sequelize");
-const tokgen = new TokenGenerator();
+const jwt = require("jsonwebtoken");
 
 const resolvers = {
   Query: {
-    async authenticate(root, { login, password }, context) {
-      console.dir(context.currentUser);
-      return {...context.currentUser, ...tokgen.generate()}
-    } ,
+    async authenticate(root, { login, password }) {
+        const user = await Users.findOne({
+          where: { login: login, password: password }
+        });
+        if (user) {
+          const token =  jwt.sign(
+              {...JSON.stringify(user)},
+              "privatekey",
+              { expiresIn: 60 * 60  });
+              return { user: JSON.parse(JSON.stringify(user)), token: token };
+        }
+        else {
+          return null;
+      }
+    },
     async logoutUser(parent, { key }, { redis }) {
       try {
         await redis.del(key);
@@ -17,13 +27,14 @@ const resolvers = {
         return false;
       }
     },
-  /*  async getUserInfo(parent, { key }, { redis }) {
+    async getUserInfo(root, args, context) {
       try {
-        return JSON.parse(await redis.get(key));
+        /*console.log("getUser", context);*/
+        return { ...context.currentUser };
       } catch (e) {
         return null;
       }
-    },*/
+    },
     async getAllUsers(root, { id }) {
       return Users.findAll({ where: { id: { [Op.ne]: id } } });
     }
