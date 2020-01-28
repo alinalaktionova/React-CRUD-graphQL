@@ -5,16 +5,10 @@ const tokgen = new TokenGenerator();
 
 const resolvers = {
   Query: {
-    async authenticate(root, { login, password }) {
-      try {
-        return {
-          user: Users.findOne({ where: { login: login, password: password } }),
-          token: tokgen.generate()
-        };
-      } catch (e) {
-        throw new Error("Email or password isn`t correct");
-      }
-    },
+    async authenticate(root, { login, password }, context) {
+      console.dir(context.currentUser);
+      return {...context.currentUser, ...tokgen.generate()}
+    } ,
     async logoutUser(parent, { key }, { redis }) {
       try {
         await redis.del(key);
@@ -23,13 +17,13 @@ const resolvers = {
         return false;
       }
     },
-    async getUserInfo(parent, { key }, { redis }) {
+  /*  async getUserInfo(parent, { key }, { redis }) {
       try {
         return JSON.parse(await redis.get(key));
       } catch (e) {
         return null;
       }
-    },
+    },*/
     async getAllUsers(root, { id }) {
       return Users.findAll({ where: { id: { [Op.ne]: id } } });
     }

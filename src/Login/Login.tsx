@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useLazyQuery, useMutation } from "@apollo/client";
+import {useLazyQuery, useMutation } from "@apollo/client";
 import { Redirect } from "react-router";
 import Cookies from "js-cookie";
-import { SET_USER } from "../mutationConstants";
-import { AUTHENTICATE } from "../queriesContants";
+import { SET_USER } from "../GraphqlOperations/mutationConstants";
+import { AUTHENTICATE } from "../GraphqlOperations/queriesContants";
 
 const Login = () => {
   const [login, setEmail] = useState("");
@@ -19,6 +19,7 @@ const Login = () => {
     return <p>Error</p>;
   }
   if (data) {
+    console.dir(data)
     setUserInfo({
       variables: {
         key: "user",
@@ -35,7 +36,7 @@ const Login = () => {
     Cookies.set("token", data.authenticate.token);
   }
   return data ? (
-    <Redirect to="/users" />
+      <Redirect to="/users" />
   ) : (
     <form
       onSubmit={(e: React.FormEvent<HTMLFormElement>) => {

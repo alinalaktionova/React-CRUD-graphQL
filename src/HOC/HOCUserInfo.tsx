@@ -2,6 +2,7 @@ import { FormControl, Input, InputLabel } from "@material-ui/core";
 import React from "react";
 
 const UserInfoCard = (props: any) => {
+    console.dir(props);
   return (
     <React.Fragment>
       <FormControl>
@@ -9,7 +10,7 @@ const UserInfoCard = (props: any) => {
         <Input
           id="name"
           value={props.name}
-          onChange={e => props.setName(e.target.value)}
+          onChange={e => props.setName({type: "set name" , payload: e.target.value })}
         />
       </FormControl>
       <FormControl>
@@ -17,7 +18,7 @@ const UserInfoCard = (props: any) => {
         <Input
           id="login"
           value={props.login}
-          onChange={e => props.setEmail(e.target.value)}
+          onChange={e => props.setEmail({type: "set login" , payload: e.target.value })}
         />
       </FormControl>
       <FormControl>
@@ -25,7 +26,7 @@ const UserInfoCard = (props: any) => {
         <Input
           id="password"
           value={props.password}
-          onChange={e => props.setPassword(e.target.value)}
+          onChange={e => props.setPassword({type: "set password" , payload: e.target.value })}
         />
       </FormControl>
       <span>{props.isAdmin && "admin"}</span>

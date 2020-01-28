@@ -4,7 +4,7 @@ import User from "./User";
 import { List } from "react-virtualized";
 import { ListUser } from "./UserList.styles";
 import { CurrentUserInterface } from "./UsersInterfaces";
-import { GET_USERS } from "../queriesContants";
+import { GET_USERS } from "../GraphqlOperations/queriesContants";
 
 const UserList = (props: CurrentUserInterface) => {
   const { data } = useQuery(GET_USERS, {

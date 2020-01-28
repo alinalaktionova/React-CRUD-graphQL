@@ -12,7 +12,7 @@ import Login from "./Login/Login";
 import CurrentUser from "./ProfileUserInfo/CurrentUser";
 import Cookies from "js-cookie";
 import { ActiveUser, ContentWrapper } from "./App.styles";
-import { GET_USER_INFO } from "./queriesContants";
+import { GET_USER_INFO } from "./GraphqlOperations/queriesContants";
 
 const token = Cookies.get("token");
 const App: React.FC = () => {
@@ -30,14 +30,14 @@ const App: React.FC = () => {
       <ContentWrapper>
         <Switch>
           <Route exact path="/">
-            {token ? <Redirect to="/users" /> : <Login />}
+            {/*{token ? <Redirect to="/users" /> : */}<Login />
           </Route>
           <Route path="/users">
             <ActiveUser>
               <CurrentUser />
-              {data.getUserInfo && data.getUserInfo.isAdmin && (
+            {/*  {data.getUserInfo && data.getUserInfo.isAdmin && (*/}
                 <CreateUserForm />
-              )}
+
             </ActiveUser>
             <UserList {...data} />
           </Route>

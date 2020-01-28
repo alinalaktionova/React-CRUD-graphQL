@@ -1,21 +1,32 @@
-import React, { useState } from "react";
+import React, {useReducer} from "react";
 import { useMutation } from "@apollo/client";
 import { UserItem } from "./UserList.styles";
-import UserInfoCard from "../HOCUserInfo";
+import UserInfoCard from "../HOC/HOCUserInfo";
 import { UserPropInterface } from "./UsersInterfaces";
-import { UPDATE_USER, DELETE_USER } from "../mutationConstants";
+import { UPDATE_USER, DELETE_USER } from "../GraphqlOperations/mutationConstants";
+
+
 
 const User = (props: UserPropInterface) => {
-  const [name, setName] = useState(props.name);
-  const [login, setEmail] = useState(props.login);
-  const [password, setPassword] = useState(props.password);
-  const [isAdmin, setAdmin] = useState(props.isAdmin);
-  const dataUser = {
-    name: name || props.name,
-    login: login || props.login,
-    password: password || props.password,
-    isAdmin: isAdmin || props.isAdmin
-  };
+  const initialState = { name: props.name, login: props.login, password: props.password, isAdmin: props.isAdmin };
+
+  function reducer(state: any, action: any) {
+    switch (action.type) {
+      case "set name":
+        return { ...state, name: action.payload };
+      case "set login":
+        return { ...state, login: action.payload };
+      case "set password":
+        return { ...state, password: action.payload };
+      case "set admin":
+        return { ...state, isAdmin: action.payload };
+      default:
+        throw new Error();
+    }
+  }
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const dataUser = state;
+  console.dir(state);
   const [deleteUser] = useMutation(DELETE_USER, {
     variables: { id: props.id }
   });
@@ -40,20 +51,21 @@ const User = (props: UserPropInterface) => {
   return (
     <UserItem>
       <UserInfoCard
-        setName={setName}
-        setEmail={setEmail}
-        setPassword={setPassword}
-        name={name}
-        login={login}
-        password={password}
+          {...props}
+        setName={dispatch}
+        setEmail={dispatch}
+        setPassword={dispatch}
+        name={state.name}
+        login={state.login}
+        password={state.password}
       />
       {props.getUserInfo && props.getUserInfo.isAdmin && (
         <React.Fragment>
           <input
             type="checkbox"
             name="admin"
-            checked={isAdmin}
-            onChange={e => setAdmin(e.target.checked)}
+            checked={state.isAdmin}
+            onChange={e => dispatch({type: "set admin" , payload: e.target.value })}
           />
           <button onClick={onEditBtnClick}>edit</button>
           <button onClick={onDeleteBtnClick}>delete</button>

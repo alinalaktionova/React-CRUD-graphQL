@@ -1,8 +1,10 @@
 const Sequelize = require("sequelize");
-const sequelize = new Sequelize("users", "postgres", "alina123", {
-  dialect: "postgres",
-  host: "localhost",
-  port: "5432"
+const env = require("./dbconnection");
+
+const sequelize = new Sequelize(env.DB, env.USER, env.PASSWORD, {
+  dialect: env.USER,
+  host: env.HOST,
+  port: env.PORT_DB
 });
 
 sequelize.authenticate();

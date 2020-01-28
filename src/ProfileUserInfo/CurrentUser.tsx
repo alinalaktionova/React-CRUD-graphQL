@@ -1,10 +1,10 @@
 import React from "react";
 import Cookies from "js-cookie";
 import { useLazyQuery, useQuery } from "@apollo/client";
-import UserInfoCard from "../HOCUserInfo";
+import UserInfoCard from "../HOC/HOCUserInfo";
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
-import { GET_USER_INFO, LOGOUT } from "../queriesContants";
+import { GET_USER_INFO, LOGOUT } from "../GraphqlOperations/queriesContants";
 
 const ProfileInfo = styled.div`
   display: flex;
