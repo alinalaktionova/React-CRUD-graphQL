@@ -21,7 +21,7 @@ const UserList = (props: CurrentUserInterface) => {
             name={user.name}
             login={user.login}
             password={user.password}
-            isAdmin={user.isAdmin}
+            admin={user.features.includes("create")}
             {...props}
           />
         ))}

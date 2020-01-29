@@ -8,7 +8,6 @@ import { createHttpLink } from "apollo-link-http";
 import { setContext } from "apollo-link-context";
 import Cookies from "js-cookie";
 
-
 const httpLink = createHttpLink({
   uri: "http://localhost:4000/graphql"
 });

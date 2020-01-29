@@ -20,11 +20,11 @@ const Login = () => {
   }
   if (data) {
     console.dir(data);
-    const {id, name, login, password, isAdmin} = data.authenticate.user;
+    const {id, features} = data.authenticate.user;
     setUserInfo({
       variables: {
         key: data.authenticate.token,
-        value: {id: id, name: name, login: login, password: password, isAdmin: isAdmin}
+        value: {id: id, features: features}
       }
     });
     Cookies.set("token", data.authenticate.token, { expires: 1 / 24 });

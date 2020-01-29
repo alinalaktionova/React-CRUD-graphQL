@@ -29,7 +29,7 @@ const UserInfoCard = (props: any) => {
           onChange={e => props.setPassword({type: "set password" , payload: e.target.value })}
         />
       </FormControl>
-      <span>{props.isAdmin && "admin"}</span>
+      <span>{props.admin && "admin"}</span>
     </React.Fragment>
   );
 };

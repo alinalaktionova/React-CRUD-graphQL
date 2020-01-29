@@ -3,7 +3,7 @@ export interface UserDataInterface {
     name: string,
     login: string,
     password: string,
-    isAdmin: boolean
+    features: Array<string>
 }
 
 export interface UserPropInterface {
@@ -11,7 +11,7 @@ export interface UserPropInterface {
     name: string,
     login: string,
     password: string,
-    isAdmin: boolean,
+    admin:Boolean,
     getUserInfo: UserDataInterface
 }
 

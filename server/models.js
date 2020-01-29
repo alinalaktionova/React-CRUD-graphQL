@@ -32,10 +32,10 @@ const Users = sequelize.define("users", {
   },
   password: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: true
   },
-  isAdmin: {
-    type: Sequelize.BOOLEAN,
+  features: {
+    type: Sequelize.ARRAY(Sequelize.STRING),
     allowNull: false
   }
 });

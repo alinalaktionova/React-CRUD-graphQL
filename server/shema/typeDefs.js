@@ -6,15 +6,18 @@ const typeDefs = gql`
     name: String
     login: String
     password: String
-    isAdmin: Boolean
+    features: [String]
   }
   input UserInfo {
     id: Int
     name: String
     login: String
     password: String
-    isAdmin: Boolean
-    token: String
+    admin: Boolean
+  }
+  input CurrentUserInfo {
+    id: Int
+    features: [String]
   }
   type Auth {
     user: User
@@ -30,7 +33,7 @@ const typeDefs = gql`
     createUser(data: UserInfo): User!
     updateUser(id: Int, data: UserInfo): User!
     deleteUser(id: Int!): Int!
-    setUserInfo(key: String!, value: UserInfo): Boolean!
+    setUserInfo(key: String!, value: CurrentUserInfo): Boolean!
   }
 `;
 module.exports = typeDefs;

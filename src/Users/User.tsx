@@ -8,7 +8,7 @@ import { UPDATE_USER, DELETE_USER } from "../GraphqlOperations/mutationConstants
 
 
 const User = (props: UserPropInterface) => {
-  const initialState = { name: props.name, login: props.login, password: props.password, isAdmin: props.isAdmin };
+  const initialState = { name: props.name, login: props.login, password: props.password, admin: props.admin };
 
   function reducer(state: any, action: any) {
     switch (action.type) {
@@ -19,7 +19,7 @@ const User = (props: UserPropInterface) => {
       case "set password":
         return { ...state, password: action.payload };
       case "set admin":
-        return { ...state, isAdmin: action.payload };
+        return { ...state, admin: action.payload };
       default:
         throw new Error();
     }
@@ -59,12 +59,12 @@ const User = (props: UserPropInterface) => {
         login={state.login}
         password={state.password}
       />
-      {props.getUserInfo && props.getUserInfo.isAdmin && (
+      {props.getUserInfo && props.getUserInfo.features.includes("create") && (
         <React.Fragment>
           <input
             type="checkbox"
             name="admin"
-            checked={state.isAdmin}
+            checked={state.admin}
             onChange={e => dispatch({type: "set admin" , payload: e.target.value })}
           />
           <button onClick={onEditBtnClick}>edit</button>

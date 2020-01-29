@@ -34,7 +34,7 @@ const App: React.FC = () => {
           <Route path="/users">
             <ActiveUser>
               <CurrentUser />
-              {data.getUserInfo && data.getUserInfo.isAdmin && (
+              {data.getUserInfo && (
                 <CreateUserForm />)}
             </ActiveUser>
             <UserList {...data} />

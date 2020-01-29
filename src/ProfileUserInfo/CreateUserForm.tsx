@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer } from "react";
 import { useMutation } from "@apollo/client";
 import { Input, Form, Button } from "./FormUser.style";
 import { CREATE_USER } from "../GraphqlOperations/mutationConstants";
@@ -23,7 +23,7 @@ const CreateUserForm = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const dataUser = {
     ...state,
-    isAdmin: false
+    admin: false
   };
 
   const [createUser] = useMutation(CREATE_USER, {

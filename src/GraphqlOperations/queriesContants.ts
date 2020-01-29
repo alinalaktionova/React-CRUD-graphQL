@@ -7,7 +7,7 @@ export const GET_USER_INFO = gql`
       name
       login
       password
-      isAdmin
+      features
     }
   }
 `;
@@ -25,7 +25,7 @@ export const GET_USERS = gql`
       name
       login
       password
-      isAdmin
+      features
     }
   }
 `;
@@ -38,7 +38,7 @@ export const AUTHENTICATE = gql`
         name
         login
         password
-        isAdmin
+        features 
       }
       token
     }

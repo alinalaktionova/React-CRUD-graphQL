@@ -13,7 +13,7 @@ export const UPDATE_USER = gql`
       name
       login
       password
-      isAdmin
+      features
     }
   }
 `;
@@ -24,12 +24,12 @@ export const CREATE_USER = gql`
       name
       login
       password
-      isAdmin
+      features
     }
   }
 `;
 export const SET_USER = gql`
-  mutation($key: String!, $value: UserInfo) {
+  mutation($key: String!, $value: CurrentUserInfo) {
     setUserInfo(key: $key, value: $value)
   }
 `;
