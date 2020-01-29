@@ -15,10 +15,9 @@ import { ActiveUser, ContentWrapper } from "./App.styles";
 import { GET_USER_INFO } from "./GraphqlOperations/queriesContants";
 
 const token = Cookies.get("token");
+console.log(token);
 const App: React.FC = () => {
-  const { loading, error, data } = useQuery(GET_USER_INFO, {
-    variables: { key: "user" }
-  });
+  const { loading, error, data } = useQuery(GET_USER_INFO);
   if (error) {
     return <div>Error</div>;
   }

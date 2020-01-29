@@ -3,9 +3,7 @@ const Hapi = require("hapi");
 const Users = require("./models");
 const schema = require("./shema/schema");
 const Redis = require("ioredis");
-const Cookies = require("js-cookie");
 const env = require("./dbconnection");
-/*{Users, redis}*/
 
 const redis = new Redis();
 

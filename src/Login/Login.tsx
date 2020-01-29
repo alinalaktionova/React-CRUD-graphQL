@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import { Redirect } from "react-router";
 import Cookies from "js-cookie";
 import { SET_USER } from "../GraphqlOperations/mutationConstants";
@@ -20,22 +20,17 @@ const Login = () => {
   }
   if (data) {
     console.dir(data);
+    const {id, name, login, password, isAdmin} = data.authenticate.user;
     setUserInfo({
       variables: {
         key: data.authenticate.token,
-        value: {
-          id: data.authenticate.user.id,
-          name: data.authenticate.user.name,
-          login: data.authenticate.user.login,
-          password: data.authenticate.user.password,
-          isAdmin: data.authenticate.user.isAdmin
-        }
+        value: {id: id, name: name, login: login, password: password, isAdmin: isAdmin}
       }
     });
-    Cookies.set("token", data.authenticate.token, {expires: 1/24});
+    Cookies.set("token", data.authenticate.token, { expires: 1 / 24 });
   }
   return data ? (
-      <Redirect to="/users" />
+    <Redirect to="/users" />
   ) : (
     <form
       onSubmit={(e: React.FormEvent<HTMLFormElement>) => {

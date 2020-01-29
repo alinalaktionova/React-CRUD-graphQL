@@ -5,18 +5,17 @@ const jwt = require("jsonwebtoken");
 const resolvers = {
   Query: {
     async authenticate(root, { login, password }) {
-        const user = await Users.findOne({
-          where: { login: login, password: password }
+      const user = await Users.findOne({
+        where: { login: login, password: password }
+      });
+      if (user) {
+        const token = jwt.sign({ ...JSON.stringify(user) }, "privatekey", {
+          expiresIn: 60 * 60
         });
-        if (user) {
-          const token =  jwt.sign(
-              {...JSON.stringify(user)},
-              "privatekey",
-              { expiresIn: 60 * 60  });
-              return { user: JSON.parse(JSON.stringify(user)), token: token };
-        }
-        else {
-          return null;
+        return { user: JSON.parse(JSON.stringify(user)), token: token };
+      } else {
+        console.log("err");
+        return null;
       }
     },
     async logoutUser(parent, { key }, { redis }) {
@@ -29,8 +28,7 @@ const resolvers = {
     },
     async getUserInfo(root, args, context) {
       try {
-        /*console.log("getUser", context);*/
-        return { ...context.currentUser };
+        return await { ...context.currentUser };
       } catch (e) {
         return null;
       }
@@ -42,6 +40,7 @@ const resolvers = {
   Mutation: {
     async setUserInfo(parent, { key, value }, { redis }) {
       try {
+        console.log("set user",JSON.stringify(value))
         await redis.set(key, JSON.stringify(value));
         return true;
       } catch (e) {
@@ -49,27 +48,39 @@ const resolvers = {
       }
     },
 
-    async createUser(root, { data }) {
-      return Users.create({
-        name: data.name,
-        login: data.login,
-        password: data.password,
-        isAdmin: data.isAdmin
-      });
-    },
-    async updateUser(root, { id, data }) {
-      return Users.update(
-        {
+    async createUser(root, { data }, context) {
+      if (context.user && context.user.isAdmin) {
+        return Users.create({
           name: data.name,
           login: data.login,
           password: data.password,
           isAdmin: data.isAdmin
-        },
-        { where: { id: id } }
-      );
+        });
+      } else {
+        return null;
+      }
     },
-    async deleteUser(root, { id }) {
-      return Users.destroy({ where: { id: id } });
+    async updateUser(root, { id, data }, context) {
+      if (context.user && context.user.isAdmin) {
+        return Users.update(
+          {
+            name: data.name,
+            login: data.login,
+            password: data.password,
+            isAdmin: data.isAdmin
+          },
+          { where: { id: id } }
+        );
+      } else {
+        return null;
+      }
+    },
+    async deleteUser(root, { id }, context) {
+      if (context.user && context.user.isAdmin) {
+        return Users.destroy({ where: { id: id } });
+      } else {
+        return null;
+      }
     }
   }
 };
