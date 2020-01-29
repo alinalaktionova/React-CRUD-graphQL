@@ -4,6 +4,7 @@ import { useLazyQuery, useQuery } from "@apollo/client";
 import UserInfoCard from "../HOC/HOCUserInfo";
 import styled from "styled-components";
 import { GET_USER_INFO, LOGOUT } from "../GraphqlOperations/queriesContants";
+import { Link } from "react-router-dom";
 
 const ProfileInfo = styled.div`
   display: flex;
@@ -13,7 +14,9 @@ const ProfileInfo = styled.div`
 
 const CurrentUser = () => {
   const { data } = useQuery(GET_USER_INFO);
-  const [logoutUser] = useLazyQuery(LOGOUT, { variables: { key:  Cookies.get("token") } });
+  const [logoutUser] = useLazyQuery(LOGOUT, {
+    variables: { key: Cookies.get("token") }
+  });
   const onLogoutClick = () => {
     logoutUser();
     Cookies.remove("token");
@@ -22,6 +25,7 @@ const CurrentUser = () => {
     <ProfileInfo>
       <span> My info </span>
       <UserInfoCard {...data.getUserInfo} />
+      <Link to="/password">Edit password</Link>
       <button onClick={onLogoutClick}>logout</button>
     </ProfileInfo>
   );

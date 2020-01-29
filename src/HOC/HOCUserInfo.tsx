@@ -21,14 +21,6 @@ const UserInfoCard = (props: any) => {
           onChange={e => props.setEmail({type: "set login" , payload: e.target.value })}
         />
       </FormControl>
-      <FormControl>
-        <InputLabel htmlFor="password">Password</InputLabel>
-        <Input
-          id="password"
-          value={props.password}
-          onChange={e => props.setPassword({type: "set password" , payload: e.target.value })}
-        />
-      </FormControl>
       <span>{props.admin && "admin"}</span>
     </React.Fragment>
   );

@@ -13,9 +13,12 @@ import CurrentUser from "./ProfileUserInfo/CurrentUser";
 import Cookies from "js-cookie";
 import { ActiveUser, ContentWrapper } from "./App.styles";
 import { GET_USER_INFO } from "./GraphqlOperations/queriesContants";
+import PasswordSetting from "./Users/PasswordSetting";
+import PasswordEdit from "./Users/PasswordEdit";
 
 const token = Cookies.get("token");
-console.log(token);
+const regToken = Cookies.get("registration token");
+console.log(regToken);
 const App: React.FC = () => {
   const { loading, error, data } = useQuery(GET_USER_INFO);
   if (error) {
@@ -31,11 +34,16 @@ const App: React.FC = () => {
           <Route exact path="/">
             {token ? <Redirect to="/users" /> : <Login />}
           </Route>
+          <Route path="/signup">
+            {regToken ? <PasswordSetting /> : <Redirect to="/" />}
+          </Route>
+          <Route path="/password">
+            <PasswordEdit/>
+          </Route>
           <Route path="/users">
             <ActiveUser>
               <CurrentUser />
-              {data.getUserInfo && (
-                <CreateUserForm />)}
+              {data.getUserInfo && <CreateUserForm />}
             </ActiveUser>
             <UserList {...data} />
           </Route>

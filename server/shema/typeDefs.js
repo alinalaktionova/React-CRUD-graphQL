@@ -23,6 +23,10 @@ const typeDefs = gql`
     user: User
     token: String
   }
+  type Registration {
+    token: String
+    id: Int
+  }
   type Query {
     getAllUsers(id: Int!): [User]
     getUserInfo: User
@@ -30,7 +34,8 @@ const typeDefs = gql`
     logoutUser(key: String!): Boolean!
   }
   type Mutation {
-    createUser(data: UserInfo): User!
+    addPassword(token: String, password: String): User
+    createUser(data: UserInfo): Registration
     updateUser(id: Int, data: UserInfo): User!
     deleteUser(id: Int!): Int!
     setUserInfo(key: String!, value: CurrentUserInfo): Boolean!

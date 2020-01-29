@@ -19,12 +19,9 @@ export const UPDATE_USER = gql`
 `;
 export const CREATE_USER = gql`
   mutation($data: UserInfo) {
-    createUser(data: $data) {
+    createUser(data: $data){
+      token
       id
-      name
-      login
-      password
-      features
     }
   }
 `;
@@ -32,4 +29,13 @@ export const SET_USER = gql`
   mutation($key: String!, $value: CurrentUserInfo) {
     setUserInfo(key: $key, value: $value)
   }
+`;
+
+export const ADD_PASSWORD = gql`
+    mutation($token: String!, $password: String!) {
+      addPassword(token: $token, password: $password){
+        name
+        login
+      }
+    }
 `;

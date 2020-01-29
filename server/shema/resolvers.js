@@ -9,7 +9,7 @@ const resolvers = {
         where: { login: login, password: password }
       });
       if (user) {
-        const token = jwt.sign({ ...JSON.stringify(user) }, "privatekey", {
+        const token = jwt.sign({ ...JSON.stringify(user) }, process.env.AUTH_KEY, {
           expiresIn: 60 * 60
         });
         return { user: JSON.parse(JSON.stringify(user)), token: token };
@@ -50,20 +50,42 @@ const resolvers = {
     },
 
     async createUser(root, { data }, context) {
-      if (context.currentUser && context.currentUser.features.includes("create")) {
-        return Users.create({
+      if (
+        context.currentUser &&
+        context.currentUser.features.includes("create")
+      ) {
+        const user = await Users.create({
           name: data.name,
           login: data.login,
-          password: data.password,
           features: !data.admin && ["edit"]
         });
+        const token = jwt.sign(
+          { name: data.name, login: data.login },
+            process.env.REGISTER_KEY
+        );
+        console.log(token);
+        return { token: token, id: JSON.parse(JSON.stringify(user)).id };
       } else {
         return null;
       }
     },
+    async addPassword(root, { token, password }, { redis }) {
+      try {
+        await Users.update(
+            {password: password},
+            {where: {id: JSON.parse(await redis.get(token)).id}}
+        );
+        await redis.del(token);
+      }catch (e) {
+        console.log("err");
+        return null;
+      }
+    },
     async updateUser(root, { id, data }, context) {
-      if (context.currentUser && context.currentUser.features.includes("edit")) {
-        console.log(data);
+      if (
+        context.currentUser &&
+        context.currentUser.features.includes("edit")
+      ) {
         return Users.update(
           {
             name: data.name,
@@ -78,7 +100,10 @@ const resolvers = {
       }
     },
     async deleteUser(root, { id }, context) {
-      if (context.currentUser && context.currentUser.features.includes("delete")) {
+      if (
+        context.currentUser &&
+        context.currentUser.features.includes("delete")
+      ) {
         return Users.destroy({ where: { id: id } });
       } else {
         return null;

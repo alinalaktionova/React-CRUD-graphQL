@@ -1,7 +1,8 @@
 import React, { useReducer } from "react";
 import { useMutation } from "@apollo/client";
 import { Input, Form, Button } from "./FormUser.style";
-import { CREATE_USER } from "../GraphqlOperations/mutationConstants";
+import {CREATE_USER, SET_USER} from "../GraphqlOperations/mutationConstants";
+import Cookies from "js-cookie";
 
 const initialState = { name: "", login: "", password: "" };
 
@@ -11,8 +12,6 @@ function reducer(state: any, action: any) {
       return { ...state, name: action.payload };
     case "set login":
       return { ...state, login: action.payload };
-    case "set password":
-      return { ...state, password: action.payload };
     case "return initial state":
       return initialState;
     default:
@@ -29,11 +28,21 @@ const CreateUserForm = () => {
   const [createUser] = useMutation(CREATE_USER, {
     variables: { data: dataUser }
   });
+  const [setUserInfo] = useMutation(SET_USER);
+
   const onSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    createUser();
+    createUser().then(res =>{setUserInfo({
+      variables: {
+        key: res.data.createUser.token,
+        value: {id: res.data.createUser.id}
+      }
+    });
+    Cookies.set("registration token", res.data.createUser.token);
+    console.dir(res);
     dispatch({ type: "return initial state" });
-  };
+  });
+};
 
   return (
     <Form onSubmit={onSubmitForm}>
@@ -50,15 +59,6 @@ const CreateUserForm = () => {
         placeholder="Email"
         name="email"
         onChange={e => dispatch({ type: "set login", payload: e.target.value })}
-      />
-      <Input
-        type="password"
-        value={state.password}
-        placeholder="Password"
-        name="password"
-        onChange={e =>
-          dispatch({ type: "set password", payload: e.target.value })
-        }
       />
       <Button type="submit">Create user</Button>
     </Form>
