@@ -12,13 +12,14 @@ const ProfileInfo = styled.div`
   align-items: center;
 `;
 
+
 const CurrentUser = () => {
   const { data } = useQuery(GET_USER_INFO);
-  const [logoutUser] = useLazyQuery(LOGOUT, {
-    variables: { key: Cookies.get("token") }
-  });
+  const [logoutUser] = useLazyQuery(LOGOUT);
   const onLogoutClick = () => {
-    logoutUser();
+    logoutUser({
+        variables: { key: Cookies.get("token") }
+    });
     Cookies.remove("token");
   };
   return (

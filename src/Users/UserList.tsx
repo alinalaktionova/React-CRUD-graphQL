@@ -20,7 +20,6 @@ const UserList = (props: CurrentUserInterface) => {
             key={user.id}
             name={user.name}
             login={user.login}
-            password={user.password}
             admin={user.features.includes("create")}
             {...props}
           />

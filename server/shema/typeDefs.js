@@ -5,14 +5,14 @@ const typeDefs = gql`
     id: Int
     name: String
     login: String
-    password: String
     features: [String]
+    isActive: Boolean
+    isDeleted: Boolean
   }
   input UserInfo {
     id: Int
     name: String
     login: String
-    password: String
     admin: Boolean
   }
   input CurrentUserInfo {
@@ -34,10 +34,10 @@ const typeDefs = gql`
     logoutUser(key: String!): Boolean!
   }
   type Mutation {
-    addPassword(token: String, password: String): User
+    addPassword(token: String, password: String): Boolean!
     createUser(data: UserInfo): Registration
     updateUser(id: Int, data: UserInfo): User!
-    deleteUser(id: Int!): Int!
+    deleteUser(id: Int!): Int
     setUserInfo(key: String!, value: CurrentUserInfo): Boolean!
   }
 `;

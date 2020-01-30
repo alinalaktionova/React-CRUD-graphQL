@@ -1,14 +1,11 @@
-interface User {
+interface UserDataInterface{
     id: number,
     name: string,
     login: string,
-    password: string,
-}
-export interface UserDataInterface extends User{
     features: Array<string>
 }
 
-export interface UserPropInterface extends User{
+export interface UserPropInterface extends UserDataInterface{
     admin:Boolean,
     getUserInfo: UserDataInterface
 }

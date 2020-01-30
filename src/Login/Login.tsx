@@ -10,6 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [authenticate, { error, data }] = useLazyQuery(AUTHENTICATE);
   const [setUserInfo] = useMutation(SET_USER);
+
   const onSubmitForm = () => {
     authenticate({
       variables: { login: login, password: password }

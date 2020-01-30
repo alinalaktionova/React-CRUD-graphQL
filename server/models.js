@@ -19,13 +19,11 @@ const Users = sequelize.define("users", {
   },
   name: {
     type: Sequelize.STRING,
-    allowNull: false,
-    unique: true
+    allowNull: false
   },
   login: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: true,
     validate: {
       isEmail: true
     }
@@ -36,6 +34,14 @@ const Users = sequelize.define("users", {
   },
   features: {
     type: Sequelize.ARRAY(Sequelize.STRING),
+    allowNull: false
+  },
+  isActive: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false
+  },
+  isDeleted: {
+    type: Sequelize.BOOLEAN,
     allowNull: false
   }
 });

@@ -6,7 +6,6 @@ export const GET_USER_INFO = gql`
       id
       name
       login
-      password
       features
     }
   }
@@ -24,7 +23,6 @@ export const GET_USERS = gql`
       id
       name
       login
-      password
       features
     }
   }
@@ -35,10 +33,7 @@ export const AUTHENTICATE = gql`
     authenticate(login: $login, password: $password) {
       user {
         id
-        name
-        login
-        password
-        features 
+        features
       }
       token
     }

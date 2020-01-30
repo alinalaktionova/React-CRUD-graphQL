@@ -12,7 +12,6 @@ export const UPDATE_USER = gql`
       id
       name
       login
-      password
       features
     }
   }
@@ -33,9 +32,6 @@ export const SET_USER = gql`
 
 export const ADD_PASSWORD = gql`
     mutation($token: String!, $password: String!) {
-      addPassword(token: $token, password: $password){
-        name
-        login
-      }
+      addPassword(token: $token, password: $password)
     }
 `;

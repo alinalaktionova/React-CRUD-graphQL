@@ -4,7 +4,7 @@ import { Input, Form, Button } from "./FormUser.style";
 import {CREATE_USER, SET_USER} from "../GraphqlOperations/mutationConstants";
 import Cookies from "js-cookie";
 
-const initialState = { name: "", login: "", password: "" };
+const initialState = { name: "", login: ""};
 
 function reducer(state: any, action: any) {
   switch (action.type) {

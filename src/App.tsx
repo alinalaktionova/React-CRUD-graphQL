@@ -43,7 +43,7 @@ const App: React.FC = () => {
           <Route path="/users">
             <ActiveUser>
               <CurrentUser />
-              {data.getUserInfo && <CreateUserForm />}
+              {data.getUserInfo && data.getUserInfo.features.includes("create") && <CreateUserForm />}
             </ActiveUser>
             <UserList {...data} />
           </Route>
