@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/client";
 import User from "./User";
 import { List } from "react-virtualized";
 import { ListUser } from "./UserList.styles";
-import { CurrentUserInterface } from "./UsersInterfaces";
+import { CurrentUserInterface, UserDataInterface } from "./UsersInterfaces";
 import { GET_USERS } from "../GraphqlOperations/queriesContants";
 
 const UserList = (props: CurrentUserInterface) => {
@@ -14,16 +14,17 @@ const UserList = (props: CurrentUserInterface) => {
     return (
       <ListUser key={key} style={style}>
         <span>User List</span>
-        {data && data.getAllUsers.map((user: any) => (
-          <User
-            id={user.id}
-            key={user.id}
-            name={user.name}
-            login={user.login}
-            admin={user.features.includes("create")}
-            {...props}
-          />
-        ))}
+        {data &&
+          data.getAllUsers.map((user: UserDataInterface) => (
+            <User
+              id={user.id}
+              key={user.id}
+              name={user.name}
+              login={user.login}
+              admin={user.features.includes("create")}
+              {...props}
+            />
+          ))}
       </ListUser>
     );
   }

@@ -1,11 +1,12 @@
 import { Redirect } from "react-router";
 import React, { useState } from "react";
-import {useMutation} from "@apollo/client";
-import {ADD_PASSWORD} from "../GraphqlOperations/mutationConstants";
+import { useMutation } from "@apollo/client";
+import { ADD_PASSWORD } from "../GraphqlOperations/mutationConstants";
 import Cookies from "js-cookie";
 
 const token = Cookies.get("registration token");
-const PasswordSetting = () => {
+
+const PasswordSetup = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [addPassword] = useMutation(ADD_PASSWORD);
@@ -16,13 +17,13 @@ const PasswordSetting = () => {
         if (password !== confirmPassword) {
           throw Error("passwords must match");
         }
-          addPassword({
-              variables: {
-                  token: token,
-                  password: password
-              }
-          }).then(res=> console.dir(res));
-        Cookies.remove("registration token")
+        addPassword({
+          variables: {
+            token: token,
+            password: password
+          }
+        });
+        Cookies.remove("registration token");
       }}
     >
       <input
@@ -44,4 +45,4 @@ const PasswordSetting = () => {
   );
 };
 
-export default PasswordSetting;
+export default PasswordSetup;

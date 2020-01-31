@@ -13,7 +13,7 @@ import CurrentUser from "./ProfileUserInfo/CurrentUser";
 import Cookies from "js-cookie";
 import { ActiveUser, ContentWrapper } from "./App.styles";
 import { GET_USER_INFO } from "./GraphqlOperations/queriesContants";
-import PasswordSetting from "./Users/PasswordSetting";
+import PasswordSetup from "./Users/PasswordSetup";
 import PasswordEdit from "./Users/PasswordEdit";
 
 const token = Cookies.get("token");
@@ -35,15 +35,18 @@ const App: React.FC = () => {
             {token ? <Redirect to="/users" /> : <Login />}
           </Route>
           <Route path="/signup">
-            {regToken ? <PasswordSetting /> : <Redirect to="/" />}
+            {regToken ? <PasswordSetup /> : <Redirect to="/" />}
           </Route>
           <Route path="/password">
-            <PasswordEdit/>
+            {token ? <PasswordEdit /> : <Redirect to="/" />}
           </Route>
           <Route path="/users">
             <ActiveUser>
               <CurrentUser />
-              {data.getUserInfo && data.getUserInfo.features.includes("create") && <CreateUserForm />}
+              {data.getUserInfo &&
+                data.getUserInfo.features.includes("create") && (
+                  <CreateUserForm />
+                )}
             </ActiveUser>
             <UserList {...data} />
           </Route>

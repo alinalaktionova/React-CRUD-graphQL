@@ -1,7 +1,7 @@
 const Users = require("../../models");
 const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
-const bcrypt = require('bcryptjs');
+const bcrypt = require("bcryptjs");
 
 const queries = {
   async authenticate(root, { login, password }) {
@@ -13,19 +13,22 @@ const queries = {
       }
     });
     if (user) {
-      console.log(await bcrypt.compare( password, JSON.parse(JSON.stringify(user)).password));
-      if(await bcrypt.compare( password, JSON.parse(JSON.stringify(user)).password)) {
+      if (
+        await bcrypt.compare(
+          password,
+          JSON.parse(JSON.stringify(user)).password
+        )
+      ) {
         const token = jwt.sign(
-            {...JSON.stringify(user)},
-            process.env.AUTH_KEY,
-            {
-              expiresIn: 60 * 60
-            }
+          { ...JSON.stringify(user) },
+          process.env.AUTH_KEY,
+          {
+            expiresIn: 60 * 60
+          }
         );
-        return {user: JSON.parse(JSON.stringify(user)), token: token};
+        return { user: JSON.parse(JSON.stringify(user)), token: token };
       }
     } else {
-      console.log("err");
       return null;
     }
   },

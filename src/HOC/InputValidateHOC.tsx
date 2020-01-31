@@ -7,9 +7,8 @@ interface Props {
   fieldName: string;
   id: string;
   label: string;
-  variant: string;
   type: string;
-  validate?: any;
+  variant: string
 }
 
 const Input = styled.div`

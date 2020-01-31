@@ -20,7 +20,6 @@ const Login = () => {
     return <p>Error</p>;
   }
   if (data) {
-    console.dir(data);
     const {id, features} = data.authenticate.user;
     setUserInfo({
       variables: {

@@ -1,27 +1,15 @@
-import React, { useReducer } from "react";
+import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { Input, Form, Button } from "./FormUser.style";
-import {CREATE_USER, SET_USER} from "../GraphqlOperations/mutationConstants";
+import { CREATE_USER, SET_USER } from "../GraphqlOperations/mutationConstants";
 import Cookies from "js-cookie";
 
-const initialState = { name: "", login: ""};
-
-function reducer(state: any, action: any) {
-  switch (action.type) {
-    case "set name":
-      return { ...state, name: action.payload };
-    case "set login":
-      return { ...state, login: action.payload };
-    case "return initial state":
-      return initialState;
-    default:
-      throw new Error();
-  }
-}
 const CreateUserForm = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [name, setName] = useState("");
+  const [login, setLogin] = useState("");
   const dataUser = {
-    ...state,
+    name: name,
+    login: login,
     admin: false
   };
 
@@ -32,17 +20,18 @@ const CreateUserForm = () => {
 
   const onSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    createUser().then(res =>{setUserInfo({
-      variables: {
-        key: res.data.createUser.token,
-        value: {id: res.data.createUser.id}
-      }
+    createUser().then(res => {
+      setUserInfo({
+        variables: {
+          key: res.data.createUser.token,
+          value: { id: res.data.createUser.id }
+        }
+      });
+      Cookies.set("registration token", res.data.createUser.token);
+      setName("");
+      setLogin("");
     });
-    Cookies.set("registration token", res.data.createUser.token);
-    console.dir(res);
-    dispatch({ type: "return initial state" });
-  });
-};
+  };
 
   return (
     <Form onSubmit={onSubmitForm}>
@@ -51,14 +40,14 @@ const CreateUserForm = () => {
         value={state.name}
         placeholder="Name"
         name="name"
-        onChange={e => dispatch({ type: "set name", payload: e.target.value })}
+        onChange={e => setName(e.target.value)}
       />
       <Input
         type="email"
         value={state.login}
         placeholder="Email"
         name="email"
-        onChange={e => dispatch({ type: "set login", payload: e.target.value })}
+        onChange={e => setLogin(e.target.value)}
       />
       <Button type="submit">Create user</Button>
     </Form>

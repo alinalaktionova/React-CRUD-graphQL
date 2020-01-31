@@ -35,9 +35,10 @@ const typeDefs = gql`
   }
   type Mutation {
     addPassword(token: String, password: String): Boolean!
+    updatePassword(oldPassword: String, newPassword: String): Boolean!
     createUser(data: UserInfo): Registration
-    updateUser(id: Int, data: UserInfo): User!
-    deleteUser(id: Int!): Int
+    updateUser(id: Int, data: UserInfo): User
+    deleteUser(id: Int!): [User]
     setUserInfo(key: String!, value: CurrentUserInfo): Boolean!
   }
 `;

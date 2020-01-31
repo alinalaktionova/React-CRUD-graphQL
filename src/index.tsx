@@ -3,13 +3,13 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import { ApolloClient } from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
-import { ApolloProvider } from "@apollo/client"
+import { ApolloProvider } from "@apollo/client";
 import { createHttpLink } from "apollo-link-http";
 import { setContext } from "apollo-link-context";
 import Cookies from "js-cookie";
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:4000/graphql"
+  uri: process.env.URI
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -28,8 +28,8 @@ const client: any = new ApolloClient({
 });
 
 ReactDOM.render(
-    <ApolloProvider client={client}>
-        <App />
-    </ApolloProvider>,
+  <ApolloProvider client={client}>
+    <App />
+  </ApolloProvider>,
   document.getElementById("root")
 );
