@@ -6,7 +6,6 @@ import { DELETE_USER } from "../GraphqlOperations/mutationConstants";
 import SettingsCard from "../HOC/SettingsCard";
 
 const User = (props: Partial<UserPropInterface>) => {
-  console.log(props);
 
   const initialValues: Partial<UserPropInterface> = {
     name: props.name,

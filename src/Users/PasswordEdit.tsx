@@ -1,11 +1,12 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
-import { SettingsForm } from "../HOC/SettingsCard";
+import { SettingsForm } from "../HOC/SettingCard.style";
 import { useMutation } from "@apollo/client";
 import { Form } from "react-final-form";
 import InputValidate from "../HOC/InputValidateHOC";
 import { UPDATE_PASSWORD } from "../GraphqlOperations/mutationConstants";
-import {PasswordEditInterface} from "./UsersInterfaces";
+import { PasswordEditInterface } from "./UsersInterfaces";
+import { withRouter, RouteComponentProps } from "react-router";
 
 const initialValues = {
   oldPass: "",
@@ -13,12 +14,19 @@ const initialValues = {
   confirmPass: ""
 };
 
-const PasswordEdit = () => {
+const PasswordEdit = (props: RouteComponentProps ) => {
   const [updatePassword] = useMutation(UPDATE_PASSWORD);
   const handleFormSubmit = (formObj: PasswordEditInterface) => {
-      updatePassword({
-          variables: {oldPassword: formObj.oldPass, newPassword: formObj.newPass}
-      });
+    updatePassword({
+      variables: { oldPassword: formObj.oldPass, newPassword: formObj.newPass }
+    }).then(res => {
+            if (res.data.updatePassword === true) {
+                props.history.push("/users")
+            } else {
+                throw new Error("User with this password isn`t found");
+            }
+        }
+    );
   };
   return (
     <Form
@@ -70,4 +78,4 @@ const PasswordEdit = () => {
   );
 };
 
-export default PasswordEdit;
+export default withRouter(PasswordEdit);

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { Redirect } from "react-router";
-import Cookies from "js-cookie";
+import { withRouter, RouteComponentProps } from "react-router";
 import { SET_USER } from "../GraphqlOperations/mutationConstants";
 import { AUTHENTICATE } from "../GraphqlOperations/queriesContants";
+import Cookies from "js-cookie";
 
-const Login = () => {
+const Login = (props: RouteComponentProps) => {
   const [login, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authenticate, { error, data }] = useLazyQuery(AUTHENTICATE);
@@ -17,21 +17,23 @@ const Login = () => {
     });
   };
   if (error) {
-    return <p>Error</p>;
+    return <p>{error.message}</p>;
   }
   if (data) {
-    const {id, features} = data.authenticate.user;
+    const { id, features } = data.authenticate.user;
     setUserInfo({
       variables: {
         key: data.authenticate.token,
-        value: {id: id, features: features}
+        value: { id: id, features: features }
+      }
+    }).then(res => {
+      if (res.data.setUserInfo === true) {
+        Cookies.set("token", data.authenticate.token, { expires: 1 / 24 });
+        props.history.push("/users");
       }
     });
-    Cookies.set("token", data.authenticate.token, { expires: 1 / 24 });
   }
-  return data ? (
-    <Redirect to="/users" />
-  ) : (
+  return (
     <form
       onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -55,4 +57,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default withRouter(Login);

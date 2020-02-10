@@ -1,19 +1,15 @@
 const { ApolloServer } = require("apollo-server-hapi");
 const Hapi = require("hapi");
-const Users = require("./models");
+const Users = require("./models/UsersModels");
 const schema = require("./shema/schema");
 const Redis = require("ioredis");
-const env = require("./dbconnection");
+const env = require("./configs/dbconfig");
 
 const redis = new Redis();
 
 async function tradeTokenForUser(token) {
   const userObj = JSON.parse(await redis.get(token));
-  if (userObj) {
-    return userObj;
-  } else {
-    return null;
-  }
+  return userObj ? userObj : null;
 }
 
 const server = new ApolloServer({
@@ -25,7 +21,6 @@ const server = new ApolloServer({
       authToken = request.headers.authorization;
       if (authToken) {
         currentUser = await tradeTokenForUser(authToken);
-        console.log("currentUser context", currentUser)
       }
     } catch (e) {
       console.warn(`Unable to authenticate using auth token: ${authToken}`);

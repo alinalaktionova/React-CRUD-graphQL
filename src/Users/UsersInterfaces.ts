@@ -15,7 +15,7 @@ export interface CurrentUserInterface {
 }
 
 export interface PasswordEditInterface {
-    oldPass: string
-    newPass: string
-    confirmPass: string
+  oldPass: string;
+  newPass: string;
+  confirmPass: string;
 }

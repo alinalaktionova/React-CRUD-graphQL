@@ -1,32 +1,22 @@
 import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import { Dialog } from "@material-ui/core";
-import styled from "styled-components";
 import { useMutation } from "@apollo/client";
 import { UPDATE_USER } from "../GraphqlOperations/mutationConstants";
 import { Field, Form } from "react-final-form";
 import InputValidate from "./InputValidateHOC";
-import {UserPropInterface} from "../Users/UsersInterfaces";
+import { UserPropInterface } from "../Users/UsersInterfaces";
+import {CloseIcon, SettingsForm} from "./SettingCard.style";
 
-export const SettingsForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  padding: 40px;
-`;
+interface SettingsCardProps {
+    open: boolean,
+    userId: number,
+    admin?: boolean,
+    initialValues: any,
+    close(): void
+}
 
-const CloseIcon = styled.i`
-  position: absolute;
-  color: #9ba6b2;
-  font-size: 24px;
-  right: 0;
-  top: 0;
-  padding: 10px;
-  &:hover {
-    color: #20233f;
-  }
-`;
-
-const SettingsCard = (props: any) => {
+const SettingsCard = (props: SettingsCardProps) => {
   const [updateUser] = useMutation(UPDATE_USER);
   const [admin, setAdmin] = useState(props.admin);
 

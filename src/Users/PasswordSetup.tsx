@@ -1,15 +1,14 @@
-import { Redirect } from "react-router";
 import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { ADD_PASSWORD } from "../GraphqlOperations/mutationConstants";
-import Cookies from "js-cookie";
+import queryString from "query-string";
+import { withRouter, RouteComponentProps } from "react-router";
 
-const token = Cookies.get("registration token");
-
-const PasswordSetup = () => {
+const PasswordSetup = (props: RouteComponentProps) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [addPassword] = useMutation(ADD_PASSWORD);
+  const values = queryString.parse(props.location.search);
   return (
     <form
       onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
@@ -19,11 +18,11 @@ const PasswordSetup = () => {
         }
         addPassword({
           variables: {
-            token: token,
+            token: values.token,
             password: password
           }
         });
-        Cookies.remove("registration token");
+        props.history.push("/");
       }}
     >
       <input
@@ -45,4 +44,4 @@ const PasswordSetup = () => {
   );
 };
 
-export default PasswordSetup;
+export default withRouter(PasswordSetup);

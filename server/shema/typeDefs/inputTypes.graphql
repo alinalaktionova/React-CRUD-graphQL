@@ -1,0 +1,10 @@
+input UserInfo {
+  id: Int
+  name: String
+  login: String
+  admin: Boolean
+}
+input CurrentUserInfo {
+  id: Int
+  features: [String]
+}

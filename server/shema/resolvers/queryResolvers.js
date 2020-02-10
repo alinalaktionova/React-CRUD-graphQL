@@ -1,7 +1,8 @@
-const Users = require("../../models");
+const Users = require("../../models/UsersModels");
 const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const logger = require("../../logger/config");
 
 const queries = {
   async authenticate(root, { login, password }) {
@@ -12,24 +13,18 @@ const queries = {
         isDeleted: false
       }
     });
-    if (user) {
-      if (
-        await bcrypt.compare(
-          password,
-          JSON.parse(JSON.stringify(user)).password
-        )
-      ) {
-        const token = jwt.sign(
-          { ...JSON.stringify(user) },
-          process.env.AUTH_KEY,
-          {
-            expiresIn: 60 * 60
-          }
-        );
-        return { user: JSON.parse(JSON.stringify(user)), token: token };
-      }
-    } else {
+    if (!user) {
       return null;
+    }
+    if (await bcrypt.compare(password, user.toJSON().password)) {
+      const token = jwt.sign(
+        { ...JSON.stringify(user) },
+        process.env.AUTH_KEY,
+        {
+          expiresIn: 60 * 60
+        }
+      );
+      return { user: user.toJSON(), token: token };
     }
   },
   async logoutUser(parent, { key }, { redis }) {
@@ -37,14 +32,13 @@ const queries = {
       await redis.del(key);
       return true;
     } catch (e) {
+      logger.error(`Failed to log out: ${e.message}`);
       return false;
     }
   },
-  async getUserInfo(root, args, context) {
+  async getUserInfo(parent, args, context) {
     try {
-      return await Users.findOne({
-        where: { id: context.currentUser.id }
-      });
+      return await Users.findByPk(context.currentUser.id);
     } catch (e) {
       return null;
     }

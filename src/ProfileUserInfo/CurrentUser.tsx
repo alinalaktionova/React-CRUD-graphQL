@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { GET_USER_INFO, LOGOUT } from "../GraphqlOperations/queriesContants";
 import SettingsCard from "../HOC/SettingsCard";
 import { Link } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router";
 
 const ProfileInfo = styled.div`
   display: flex;
@@ -12,21 +13,27 @@ const ProfileInfo = styled.div`
   align-items: center;
 `;
 
-const CurrentUser = () => {
+const CurrentUser = (props: RouteComponentProps) => {
   const { data } = useQuery(GET_USER_INFO);
   const [logoutUser] = useLazyQuery(LOGOUT);
+
   const onLogoutClick = () => {
     logoutUser({
       variables: { key: Cookies.get("token") }
     });
     Cookies.remove("token");
+    props.history.push("/");
   };
+
   const [open, setOpen] = useState(false);
+  if (data.getUserInfo) {
+  }
+  const { name, login, features } = data.getUserInfo;
 
   const initialValues = {
-    name: data.getUserInfo && data.getUserInfo.name,
-    login: data.getUserInfo && data.getUserInfo.login,
-    admin: data.getUserInfo && data.getUserInfo.features.includes("create")
+    name,
+    login,
+    admin: features.includes("create")
   };
   const closeDialog = () => {
     setOpen(false);
@@ -49,4 +56,4 @@ const CurrentUser = () => {
   );
 };
 
-export default CurrentUser;
+export default withRouter(CurrentUser);
