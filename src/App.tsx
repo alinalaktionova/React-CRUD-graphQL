@@ -7,12 +7,14 @@ import Login from "./Login/Login";
 import CurrentUser from "./ProfileUserInfo/CurrentUser";
 import Cookies from "js-cookie";
 import { ActiveUser, ContentWrapper } from "./App.styles";
-import { GET_USER_INFO } from "./GraphqlOperations/queriesContants";
+import { GET_USER_INFO } from "./GraphqlOperations/queries";
 import PasswordSetup from "./Users/PasswordSetup";
 import PasswordEdit from "./Users/PasswordEdit";
-import RouteHOC from "./HOC/RouteHOC";
+import ProtectedRoute from "./utils/UtilsComponents/ProtectedRoute";
+import {CREATE} from "./constants/features";
+import {TOKEN} from "./constants/auth";
 
-const token = Cookies.get("token");
+const token = Cookies.get(TOKEN);
 const App: React.FC = () => {
   const { loading, error, data } = useQuery(GET_USER_INFO);
   if (error) {
@@ -25,7 +27,7 @@ const App: React.FC = () => {
     <Router>
       <ContentWrapper>
         <Switch>
-          <RouteHOC
+          <ProtectedRoute
             exact path="/"
             redirect="users"
             token={!!token}
@@ -34,13 +36,13 @@ const App: React.FC = () => {
           <Route path="/signup">
             <PasswordSetup />
           </Route>
-          <RouteHOC
+          <ProtectedRoute
             path="/password"
             redirect="/"
             token={!token}
             children={<PasswordEdit />}
           />
-          <RouteHOC
+          <ProtectedRoute
             path="/users"
             redirect="/"
             token={!token}
@@ -49,7 +51,7 @@ const App: React.FC = () => {
                 <ActiveUser>
                   <CurrentUser />
                   {data.getUserInfo &&
-                    data.getUserInfo.features.includes("create") && (
+                    data.getUserInfo.features.includes(CREATE) && (
                       <CreateUserForm />
                     )}
                 </ActiveUser>

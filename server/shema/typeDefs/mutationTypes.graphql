@@ -1,4 +1,6 @@
 type Mutation {
+    authenticate(login: String!, password: String!): Auth
+    logoutUser(key: String!): Boolean!
     addPassword(token: String, password: String): Boolean!
     updatePassword(oldPassword: String, newPassword: String): Boolean!
     createUser(data: UserInfo): Registration

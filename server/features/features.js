@@ -1,4 +1,4 @@
-const {CREATE, DELETE, EDIT} = require("./featureConstants");
+const {CREATE, DELETE, EDIT} = require("./featureOperations");
 
 const adminFeatures = [CREATE, EDIT, DELETE];
 const userFeatures = [EDIT];

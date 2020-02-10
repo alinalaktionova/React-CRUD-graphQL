@@ -7,13 +7,14 @@ import { ApolloProvider } from "@apollo/client";
 import { createHttpLink } from "apollo-link-http";
 import { setContext } from "apollo-link-context";
 import Cookies from "js-cookie";
+import {TOKEN} from "./constants/auth";
 
 const httpLink = createHttpLink({
   uri: process.env.URI
 });
 
 const authLink = setContext((_, { headers }) => {
-  const token = Cookies.get("token");
+  const token = Cookies.get(TOKEN);
   return {
     headers: {
       ...headers,

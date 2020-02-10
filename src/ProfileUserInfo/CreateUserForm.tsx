@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { Input, Form, Button } from "./FormUser.style";
-import { CREATE_USER, SET_USER } from "../GraphqlOperations/mutationConstants";
+import { CREATE_USER, SET_USER } from "../GraphqlOperations/mutations";
 
 const CreateUserForm = () => {
   const [name, setName] = useState("");

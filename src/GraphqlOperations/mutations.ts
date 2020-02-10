@@ -45,3 +45,21 @@ export const UPDATE_PASSWORD = gql`
     updatePassword(oldPassword: $oldPassword, newPassword: $newPassword)
   }
 `;
+export const LOGOUT = gql`
+  mutation ($key: String!) {
+    logoutUser(key: $key)
+  }
+`;
+
+export const AUTHENTICATE = gql`
+  mutation ($login: String!, $password: String!) {
+    authenticate(login: $login, password: $password) {
+      user {
+        id
+        features
+      }
+      token
+    }
+  }
+`;
+

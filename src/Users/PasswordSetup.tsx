@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
-import { ADD_PASSWORD } from "../GraphqlOperations/mutationConstants";
+import { ADD_PASSWORD } from "../GraphqlOperations/mutations";
 import queryString from "query-string";
-import { withRouter, RouteComponentProps } from "react-router";
+import {withRouter, RouteComponentProps, Redirect} from "react-router";
 
 const PasswordSetup = (props: RouteComponentProps) => {
   const [password, setPassword] = useState("");
@@ -21,8 +21,13 @@ const PasswordSetup = (props: RouteComponentProps) => {
             token: values.token,
             password: password
           }
+        }).then(res => {
+            if(res.data.addPassword === true){
+                return <Redirect to="/"/>
+            } else {
+                throw new Error("Can`t add password")
+            }
         });
-        props.history.push("/");
       }}
     >
       <input

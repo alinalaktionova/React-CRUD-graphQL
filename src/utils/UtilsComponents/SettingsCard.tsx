@@ -2,18 +2,18 @@ import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import { Dialog } from "@material-ui/core";
 import { useMutation } from "@apollo/client";
-import { UPDATE_USER } from "../GraphqlOperations/mutationConstants";
+import { UPDATE_USER } from "../../GraphqlOperations/mutations";
 import { Field, Form } from "react-final-form";
-import InputValidate from "./InputValidateHOC";
-import { UserPropInterface } from "../Users/UsersInterfaces";
-import {CloseIcon, SettingsForm} from "./SettingCard.style";
+import InputValidate from "./InputValidate";
+import { UserPropInterface } from "../../Users/UsersInterfaces";
+import { CloseIcon, SettingsForm } from "./SettingCard.style";
 
 interface SettingsCardProps {
-    open: boolean,
-    userId: number,
-    admin?: boolean,
-    initialValues: any,
-    close(): void
+  open: boolean,
+  userId: number | undefined,
+  admin?: boolean,
+  initialValues: any,
+  close(): void
 }
 
 const SettingsCard = (props: SettingsCardProps) => {

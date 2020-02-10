@@ -1,7 +1,7 @@
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
 
-const RouteHOC = ({ path, token, redirect, children }: any) => {
+const ProtectedRoute = ({ path, token, redirect, children }: any) => {
   return (
     <Route
       path={path}
@@ -12,4 +12,4 @@ const RouteHOC = ({ path, token, redirect, children }: any) => {
   );
 };
 
-export default RouteHOC;
+export default ProtectedRoute;

@@ -3,10 +3,33 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { Op } = require("sequelize");
 const { adminFeatures, userFeatures } = require("../../features/features");
-const { EDIT, CREATE, DELETE } = require("../../features/featureConstants");
+const { EDIT, CREATE, DELETE } = require("../../features/featureOperations");
 const logger = require("../../logger/config");
+const checkPermission = require('../../dbservices/checkPermission');
 
 const mutations = {
+  async authenticate(root, { login, password }) {
+    const user = await Users.findOne({
+      where: {
+        login: login,
+        isActive: true,
+        isDeleted: false
+      }
+    });
+    if (!user) {
+      return null;
+    }
+    if (await bcrypt.compare(password, user.toJSON().password)) {
+      const token = jwt.sign(
+        { ...JSON.stringify(user) },
+        process.env.AUTH_KEY,
+        {
+          expiresIn: process.env.JWT_LIFETIME
+        }
+      );
+      return { user: user.toJSON(), token: token };
+    }
+  },
   async setUserInfo(parent, { key, value }, { redis }) {
     try {
       await redis.set(key, JSON.stringify(value));
@@ -16,9 +39,8 @@ const mutations = {
       return false;
     }
   },
-
   async createUser(root, { data }, context) {
-    if (context.currentUser && context.currentUser.features.includes(CREATE)) {
+    if (checkPermission(context.currentUser, CREATE)) {
       const user = await Users.create({
         name: data.name,
         login: data.login,
@@ -68,7 +90,7 @@ const mutations = {
     }
   },
   async updateUser(root, { id, data }, context) {
-    if (context.currentUser && context.currentUser.features.includes(EDIT)) {
+    if (checkPermission(context.currentUser, EDIT)) {
       await Users.update(
         {
           name: data.name,
@@ -82,8 +104,17 @@ const mutations = {
       return null;
     }
   },
+  async logoutUser(parent, { key }, { redis }) {
+    try {
+      await redis.del(key);
+      return true;
+    } catch (e) {
+      logger.error(`Failed to log out: ${e.message}`);
+      return false;
+    }
+  },
   async deleteUser(root, { id }, context) {
-    if (context.currentUser && context.currentUser.features.includes(DELETE)) {
+    if (checkPermission(context.currentUser, DELETE)){
       await Users.update({ isDeleted: true }, { where: { id: id } });
       return Users.findAll({ where: { id: { [Op.ne]: id } } });
     } else {

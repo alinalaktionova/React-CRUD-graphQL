@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { UserItem } from "./UserList.styles";
 import { UserPropInterface } from "./UsersInterfaces";
-import { DELETE_USER } from "../GraphqlOperations/mutationConstants";
-import SettingsCard from "../HOC/SettingsCard";
+import { DELETE_USER } from "../GraphqlOperations/mutations";
+import SettingsCard from "../utils/UtilsComponents/SettingsCard";
+import {defineRole} from "../utils/UtilsFunctions/RolesFunction";
+import {ADMIN} from "../constants/roles";
 
 const User = (props: Partial<UserPropInterface>) => {
-
   const initialValues: Partial<UserPropInterface> = {
     name: props.name,
     login: props.login,
@@ -25,8 +26,8 @@ const User = (props: Partial<UserPropInterface>) => {
   return (
     <UserItem>
       <div>Name: {props.name}</div>
-      <div>{props.admin && "admin"}</div>
-      {props.getUserInfo && props.getUserInfo.features.includes("create") && (
+      <div>{props.admin && <span>admin</span>}</div>
+      {props.getUserInfo && (defineRole(props.getUserInfo.features) === ADMIN) && (
         <React.Fragment>
           <button onClick={() => setOpen(true)}>edit</button>
           <button onClick={() => deleteUser()}>delete</button>
@@ -34,7 +35,7 @@ const User = (props: Partial<UserPropInterface>) => {
             open={open}
             userId={props.id}
             initialValues={initialValues}
-            admin={props.admin}
+            admin={!!props.admin}
             close={closeDialog}
           />
         </React.Fragment>

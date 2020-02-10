@@ -1,24 +1,22 @@
 import React, { useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { withRouter, RouteComponentProps } from "react-router";
-import { SET_USER } from "../GraphqlOperations/mutationConstants";
-import { AUTHENTICATE } from "../GraphqlOperations/queriesContants";
+import { Redirect } from "react-router";
+import { SET_USER } from "../GraphqlOperations/mutations";
+import { AUTHENTICATE } from "../GraphqlOperations/mutations";
 import Cookies from "js-cookie";
+import {TOKEN} from "../constants/auth";
 
-const Login = (props: RouteComponentProps) => {
+const Login = () => {
   const [login, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [authenticate, { error, data }] = useLazyQuery(AUTHENTICATE);
+  const [authenticate, {data}] = useMutation(AUTHENTICATE);
   const [setUserInfo] = useMutation(SET_USER);
 
   const onSubmitForm = () => {
     authenticate({
       variables: { login: login, password: password }
-    });
+    }).then(res => console.log(res));
   };
-  if (error) {
-    return <p>{error.message}</p>;
-  }
   if (data) {
     const { id, features } = data.authenticate.user;
     setUserInfo({
@@ -28,8 +26,8 @@ const Login = (props: RouteComponentProps) => {
       }
     }).then(res => {
       if (res.data.setUserInfo === true) {
-        Cookies.set("token", data.authenticate.token, { expires: 1 / 24 });
-        props.history.push("/users");
+        Cookies.set(TOKEN, data.authenticate.token, { expires: 1 / 24 });
+        return <Redirect to="/users"/>
       }
     });
   }
@@ -57,4 +55,4 @@ const Login = (props: RouteComponentProps) => {
   );
 };
 
-export default withRouter(Login);
+export default Login ;

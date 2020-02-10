@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import Cookies from "js-cookie";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import {useMutation, useQuery} from "@apollo/client";
 import styled from "styled-components";
-import { GET_USER_INFO, LOGOUT } from "../GraphqlOperations/queriesContants";
-import SettingsCard from "../HOC/SettingsCard";
-import { Link } from "react-router-dom";
-import { withRouter, RouteComponentProps } from "react-router";
+import {GET_USER_INFO} from "../GraphqlOperations/queries";
+import SettingsCard from "../utils/UtilsComponents/SettingsCard";
+import {Link, Redirect} from "react-router-dom";
+import {LOGOUT} from "../GraphqlOperations/mutations";
+import {defineRole} from "../utils/UtilsFunctions/RolesFunction";
+import {ADMIN} from "../constants/roles";
+import {TOKEN} from "../constants/auth";
 
 const ProfileInfo = styled.div`
   display: flex;
@@ -13,16 +16,16 @@ const ProfileInfo = styled.div`
   align-items: center;
 `;
 
-const CurrentUser = (props: RouteComponentProps) => {
+const CurrentUser = () => {
   const { data } = useQuery(GET_USER_INFO);
-  const [logoutUser] = useLazyQuery(LOGOUT);
+  const [logoutUser] = useMutation(LOGOUT);
 
   const onLogoutClick = () => {
     logoutUser({
-      variables: { key: Cookies.get("token") }
+      variables: { key: Cookies.get(TOKEN) }
     });
-    Cookies.remove("token");
-    props.history.push("/");
+    Cookies.remove(TOKEN);
+    return <Redirect to="/"/>
   };
 
   const [open, setOpen] = useState(false);
@@ -33,7 +36,7 @@ const CurrentUser = (props: RouteComponentProps) => {
   const initialValues = {
     name,
     login,
-    admin: features.includes("create")
+    admin: defineRole(features) === ADMIN
   };
   const closeDialog = () => {
     setOpen(false);
@@ -56,4 +59,4 @@ const CurrentUser = (props: RouteComponentProps) => {
   );
 };
 
-export default withRouter(CurrentUser);
+export default CurrentUser;
