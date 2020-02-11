@@ -1,21 +1,22 @@
-const Users = require("../../models/UsersModels");
+const {
+  addPassword,
+  authUser,
+  createUser,
+  deleteUser,
+  getAll,
+  getUserById,
+  updatePassword,
+  updateUser
+} = require("../../dbservices/UsersSequelizeService");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const { Op } = require("sequelize");
-const { adminFeatures, userFeatures } = require("../../features/features");
 const { EDIT, CREATE, DELETE } = require("../../features/featureOperations");
 const logger = require("../../logger/config");
-const checkPermission = require('../../dbservices/checkPermission');
+const checkPermission = require("../../utils/checkPermission");
 
 const mutations = {
   async authenticate(root, { login, password }) {
-    const user = await Users.findOne({
-      where: {
-        login: login,
-        isActive: true,
-        isDeleted: false
-      }
-    });
+    const user = await authUser(login);
     if (!user) {
       return null;
     }
@@ -41,13 +42,7 @@ const mutations = {
   },
   async createUser(root, { data }, context) {
     if (checkPermission(context.currentUser, CREATE)) {
-      const user = await Users.create({
-        name: data.name,
-        login: data.login,
-        features: data.admin ? adminFeatures : userFeatures,
-        isActive: false,
-        isDeleted: false
-      });
+      const user = await createUser(data);
       const token = jwt.sign(
         { name: data.name, login: data.login },
         process.env.REGISTER_KEY
@@ -59,11 +54,8 @@ const mutations = {
   },
   async addPassword(root, { token, password }, { redis }) {
     try {
-      const hash = await bcrypt.hash(password, 10);
-      await Users.update(
-        { password: hash, isActive: true },
-        { where: { id: JSON.parse(await redis.get(token)).id } }
-      );
+      const id = JSON.parse(await redis.get(token)).id;
+      await addPassword(password, id);
       await redis.del(token);
       return true;
     } catch (e) {
@@ -73,16 +65,9 @@ const mutations = {
   },
   async updatePassword(root, { oldPassword, newPassword }, context) {
     if (context.currentUser) {
-      const user = await Users.findOne({
-        where: {
-          id: context.currentUser.id
-        }
-      });
+      const user = await getUserById(context.currentUser.id);
       if (await bcrypt.compare(oldPassword, user.toJSON().password)) {
-        await Users.update(
-          { password: await bcrypt.hash(newPassword, 10) },
-          { where: { id: context.currentUser.id } }
-        );
+        await updatePassword(newPassword, context.currentUser.id);
         return true;
       }
       logger.error("Failed to update password");
@@ -91,15 +76,8 @@ const mutations = {
   },
   async updateUser(root, { id, data }, context) {
     if (checkPermission(context.currentUser, EDIT)) {
-      await Users.update(
-        {
-          name: data.name,
-          login: data.login,
-          features: data.admin ? adminFeatures : userFeatures
-        },
-        { where: { id: id } }
-      );
-      return Users.findOne({ where: { id: id } });
+      await updateUser(id, data);
+      return getUserById(id);
     } else {
       return null;
     }
@@ -114,9 +92,9 @@ const mutations = {
     }
   },
   async deleteUser(root, { id }, context) {
-    if (checkPermission(context.currentUser, DELETE)){
-      await Users.update({ isDeleted: true }, { where: { id: id } });
-      return Users.findAll({ where: { id: { [Op.ne]: id } } });
+    if (checkPermission(context.currentUser, DELETE)) {
+      await deleteUser(id);
+      return getAll(context.currentUser.id);
     } else {
       return null;
     }

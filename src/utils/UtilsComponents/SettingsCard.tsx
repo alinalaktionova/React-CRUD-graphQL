@@ -9,11 +9,11 @@ import { UserPropInterface } from "../../Users/UsersInterfaces";
 import { CloseIcon, SettingsForm } from "./SettingCard.style";
 
 interface SettingsCardProps {
-  open: boolean,
-  userId: number | undefined,
-  admin?: boolean,
-  initialValues: any,
-  close(): void
+  open: boolean;
+  userId: number | undefined;
+  admin?: boolean;
+  initialValues: any;
+  close(): void;
 }
 
 const SettingsCard = (props: SettingsCardProps) => {
@@ -59,7 +59,7 @@ const SettingsCard = (props: SettingsCardProps) => {
               type="email"
               fieldName="login"
             />
-            {props.admin && (
+            {props.admin !== undefined && (
               <Field name="admin" type="checkbox">
                 {({ input }) => (
                   <div>
@@ -75,6 +75,7 @@ const SettingsCard = (props: SettingsCardProps) => {
                 )}
               </Field>
             )}
+
             <Button type="submit" variant="outlined" color="primary">
               Submit
             </Button>

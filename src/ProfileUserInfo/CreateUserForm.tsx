@@ -20,6 +20,7 @@ const CreateUserForm = () => {
   const onSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     createUser().then(res => {
+      console.log(res.data.createUser.token);
       setUserInfo({
         variables: {
           key: res.data.createUser.token,

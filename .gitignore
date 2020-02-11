@@ -6,7 +6,7 @@
 /.pnp
 .pnp.js
 /.env
-package-lock.json
+/server/logger/exception.log
 # testing
 /coverage
 

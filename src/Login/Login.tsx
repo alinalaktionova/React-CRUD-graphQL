@@ -15,7 +15,7 @@ const Login = () => {
   const onSubmitForm = () => {
     authenticate({
       variables: { login: login, password: password }
-    }).then(res => console.log(res));
+    });
   };
   if (data) {
     const { id, features } = data.authenticate.user;

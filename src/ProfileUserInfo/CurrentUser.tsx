@@ -1,14 +1,14 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Cookies from "js-cookie";
-import {useMutation, useQuery} from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import styled from "styled-components";
-import {GET_USER_INFO} from "../GraphqlOperations/queries";
+import { GET_USER_INFO } from "../GraphqlOperations/queries";
 import SettingsCard from "../utils/UtilsComponents/SettingsCard";
-import {Link, Redirect} from "react-router-dom";
-import {LOGOUT} from "../GraphqlOperations/mutations";
-import {defineRole} from "../utils/UtilsFunctions/RolesFunction";
-import {ADMIN} from "../constants/roles";
-import {TOKEN} from "../constants/auth";
+import { Link, Redirect } from "react-router-dom";
+import { LOGOUT } from "../GraphqlOperations/mutations";
+import { defineRole } from "../utils/UtilsFunctions/RolesFunction";
+import { ADMIN } from "../constants/roles";
+import { TOKEN } from "../constants/auth";
 
 const ProfileInfo = styled.div`
   display: flex;
@@ -25,7 +25,7 @@ const CurrentUser = () => {
       variables: { key: Cookies.get(TOKEN) }
     });
     Cookies.remove(TOKEN);
-    return <Redirect to="/"/>
+    return <Redirect to="/" />;
   };
 
   const [open, setOpen] = useState(false);
