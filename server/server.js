@@ -1,9 +1,10 @@
 const { ApolloServer } = require("apollo-server-hapi");
 const Hapi = require("hapi");
-const Users = require("./models/UsersModels");
+const Users = require("./models/sequelizeModels/UsersModel");
 const schema = require("./shema/schema");
 const Redis = require("ioredis");
 const env = require("./configs/dbconfig");
+const { getConnectionToDB } = require("./configs/typeormconfig");
 
 const redis = new Redis();
 
@@ -14,7 +15,7 @@ async function tradeTokenForUser(token) {
 
 const server = new ApolloServer({
   schema,
-  context: async ({request}) => {
+  context: async ({ request }) => {
     let authToken = null;
     let currentUser = null;
     try {
@@ -39,8 +40,15 @@ async function StartServer() {
   });
 
   await server.applyMiddleware({ app });
-  Users.sequelize.authenticate();
-  Users.sequelize.sync();
+  switch (env.ORM_TYPE) {
+    case "sequalize":
+      Users.sequelize.authenticate();
+      Users.sequelize.sync();
+      break;
+    case "typeORM":
+      await getConnectionToDB();
+      break;
+  }
   try {
     await app.start();
     console.log(`Server is running at: ${app.info.uri}`);
@@ -50,4 +58,4 @@ async function StartServer() {
 }
 
 StartServer().then(res => res);
-module.exports = redis;
+

@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { Redirect } from "react-router";
 import { SET_USER } from "../GraphqlOperations/mutations";
 import { AUTHENTICATE } from "../GraphqlOperations/mutations";
 import Cookies from "js-cookie";
-import {TOKEN} from "../constants/auth";
+import { TOKEN } from "../constants/auth";
 
 const Login = () => {
   const [login, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [authenticate, {data}] = useMutation(AUTHENTICATE);
+  const [authenticate, { data }] = useMutation(AUTHENTICATE);
   const [setUserInfo] = useMutation(SET_USER);
 
   const onSubmitForm = () => {
@@ -27,7 +27,7 @@ const Login = () => {
     }).then(res => {
       if (res.data.setUserInfo === true) {
         Cookies.set(TOKEN, data.authenticate.token, { expires: 1 / 24 });
-        return <Redirect to="/users"/>
+        return <Redirect to="/users" />;
       }
     });
   }
@@ -55,4 +55,4 @@ const Login = () => {
   );
 };
 
-export default Login ;
+export default Login;

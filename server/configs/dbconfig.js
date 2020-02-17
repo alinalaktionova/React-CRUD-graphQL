@@ -1,5 +1,5 @@
 const { Client } = require("pg");
-require('dotenv').config();
+require("dotenv").config();
 const env = process.env;
 
 const client = new Client({

@@ -6,7 +6,7 @@ import { Form } from "react-final-form";
 import InputValidate from "../utils/UtilsComponents/InputValidate";
 import { UPDATE_PASSWORD } from "../GraphqlOperations/mutations";
 import { PasswordEditInterface } from "./UsersInterfaces";
-import {Redirect} from "react-router";
+import { Redirect } from "react-router";
 
 const initialValues = {
   oldPass: "",
@@ -20,13 +20,12 @@ const PasswordEdit = () => {
     updatePassword({
       variables: { oldPassword: formObj.oldPass, newPassword: formObj.newPass }
     }).then(res => {
-            if (res.data.updatePassword === true) {
-                return <Redirect to="/users"/>
-            } else {
-                throw new Error("User with this password isn`t found");
-            }
-        }
-    );
+      if (res.data.updatePassword === true) {
+        return <Redirect to="/users" />;
+      } else {
+        throw new Error("User with this password isn`t found");
+      }
+    });
   };
   return (
     <Form

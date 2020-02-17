@@ -1,18 +1,17 @@
 const {
-  getAll,
-  getUserById
-} = require("../../dbservices/UsersSequelizeService");
+  userService
+} = require("../../dbservices/ServiceFactories/CreateServices");
 
 const queries = {
   async getUserInfo(parent, args, context) {
     try {
-      return getUserById(context.currentUser.id);
+      return userService.getUserById(context.currentUser.id);
     } catch (e) {
       return null;
     }
   },
   async getAllUsers(root, { id }) {
-    return getAll(id);
+    return userService.getAll(id);
   }
 };
 

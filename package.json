@@ -57,6 +57,7 @@
     "redis-server": "^1.2.2",
     "save": "^2.4.0",
     "styled-components": "^5.0.0",
+    "typeorm": "^0.2.22",
     "typescript": "~3.7.2",
     "uuid-token-generator": "^1.0.0",
     "winston": "^3.2.1"

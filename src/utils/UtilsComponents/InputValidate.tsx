@@ -1,14 +1,14 @@
-import React from 'react';
-import { Field } from 'react-final-form';
-import { TextField } from '@material-ui/core';
-import styled from 'styled-components';
+import React from "react";
+import { Field } from "react-final-form";
+import { TextField } from "@material-ui/core";
+import styled from "styled-components";
 
 interface Props {
   fieldName: string;
   id: string;
   label: string;
   type: string;
-  variant: string
+  variant: string;
 }
 
 const Input = styled.div`
@@ -25,23 +25,17 @@ const InputError = styled.div`
 
 const InputValidate: React.FC<Props> = ({ fieldName, id, label, type }) => (
   <Input>
-    <Field 
-      name={ fieldName }
-    >
+    <Field name={fieldName}>
       {({ input, meta }) => (
         <div>
           <TextField
-            variant="outlined" 
+            variant="outlined"
             id={id}
-            label={ label }
+            label={label}
             type={type}
-            { ...input }
+            {...input}
           />
-          {
-            meta.error && 
-            meta.touched &&
-            <InputError>{meta.error}</InputError>
-          }
+          {meta.error && meta.touched && <InputError>{meta.error}</InputError>}
         </div>
       )}
     </Field>
