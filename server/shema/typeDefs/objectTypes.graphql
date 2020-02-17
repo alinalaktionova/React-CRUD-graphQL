@@ -1,0 +1,16 @@
+type User {
+    id: Int
+    name: String
+    login: String
+    features: [String]
+    isActive: Boolean
+    isDeleted: Boolean
+}
+type Registration {
+    token: String
+    id: Int
+}
+type Auth {
+    user: User
+    token: String
+}
