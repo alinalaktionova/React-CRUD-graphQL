@@ -38,7 +38,7 @@
     "ioredis": "^4.14.1",
     "js-cookie": "^2.2.1",
     "js-logger": "^1.6.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "material-ui": "^0.20.2",
     "merge-graphql-schemas": "^1.7.6",
     "password-hash": "^1.2.2",
