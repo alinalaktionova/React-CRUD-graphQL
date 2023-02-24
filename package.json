@@ -87,6 +87,6 @@
     "apollo-link": "1.2.1"
   },
   "devDependencies": {
-    "sequelize": "^5.21.3"
+    "sequelize": "^6.29.0"
   }
 }
